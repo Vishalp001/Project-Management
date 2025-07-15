@@ -1,0 +1,85 @@
+.loginPage {
+  gap: 0;
+  .colOne {
+    width: 60%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    h2 {
+      text-align: center;
+      font-size: 30px;
+      font-weight: 700;
+    }
+    .form {
+      width: 80%;
+      .inputGroup {
+        text-align: left;
+        justify-content: start;
+        align-items: flex-start;
+        margin-bottom: 24px;
+        label {
+          font-size: 16px;
+          font-weight: 600;
+        }
+        input {
+          border-radius: 8px;
+          border: 1px solid #e2e8f0;
+          padding: 10px;
+          font-size: 16px;
+          width: 100%;
+        }
+      }
+      .signInButton {
+        display: flex;
+        background: #000;
+        align-items: center;
+        gap: 10px;
+        color: #fff;
+        border-radius: 8px;
+        cursor: pointer;
+        padding: 8px 16px;
+        &:hover {
+          background: #333;
+        }
+      }
+    }
+    .separator {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      p {
+        white-space: nowrap;
+        color: #94a3b8;
+      }
+      .chakra-separator {
+        width: 100%;
+        height: 1px;
+        background: #94a3b8;
+      }
+    }
+    .googleButton {
+      display: flex;
+      background: #fff;
+      align-items: center;
+      gap: 10px;
+      color: #000;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 8px 34px;
+      border: 1px solid #e2e8f0;
+    }
+  }
+  .colTwo {
+    width: 40%;
+    height: 100vh;
+    img {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+    }
+  }
+}
