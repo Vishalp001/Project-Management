@@ -4,14 +4,14 @@ const { Schema } = mongoose
 
 const TaskSchema = new Schema(
   {
-    title: { type: String, required: true },
+    title: { type: String, unique: true, required: true },
     description: { type: String },
     project: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
     assignedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     priority: {
       type: String,
       enum: ['Low', 'Medium', 'High'],
-      default: 'Medium',
+      default: 'Low',
     },
     status: {
       type: String,
