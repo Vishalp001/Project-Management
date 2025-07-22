@@ -9,6 +9,22 @@ export async function createProject(req, res) {
   }
 }
 
+export async function getMyProjects(req, res) {
+  try {
+    const ownerId = req.params.ownerId
+    const projects = await Project.find({ owner: ownerId }).populate(
+      'owner members tasks'
+    )
+
+    if (!projects || projects.length === 0) {
+      return res.status(404).json({ error: 'No projects found for this owner' })
+    }
+    res.status(200).json(projects)
+  } catch (error) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
 export async function getAllProjects(req, res) {
   try {
     const projects = await Project.find().populate('owner members tasks')
@@ -20,7 +36,7 @@ export async function getAllProjects(req, res) {
 
 export async function getProjectById(req, res) {
   try {
-    const project = await findById(req.params.id).populate(
+    const project = await Project.findById(req.params.id).populate(
       'owner members tasks'
     )
     if (!project) return res.status(404).json({ error: 'Project not found' })

@@ -12,14 +12,13 @@ const Navbar = () => {
   const user = JSON.parse(localStorage.getItem('user') || 'null')
 
   const { logout } = useAuth()
-  const getInitials = (name = 'Vishal Pohekar') => {
+  const getInitials = (name = '') => {
     const names = name.trim().split(' ')
     if (names.length === 0) return ''
     if (names.length === 1) return names[0][0].toUpperCase()
     return (names[0][0] + names[names.length - 1][0]).toUpperCase()
   }
 
-  getInitials()
   return (
     <div className='navbar'>
       <div className='searchBar'>

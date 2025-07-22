@@ -1,37 +1,26 @@
-import React, { useMemo, useState } from 'react'
+import React from 'react'
 import './sidebar.scss'
 import logo from '../../assets/logo.svg'
 import arrow from '../../assets/logos/arrow.svg'
 import addProjects from '../../assets/logos/addProjects.svg'
-import { myProjectsitems, sidebarMenuItem } from './sidebarConstants'
+import { sidebarMenuItem } from './sidebarConstants'
 import Modal from '../../components/modals/Modal'
 import { HStack, Text } from '@chakra-ui/react'
 import { Colorpicker } from '../../components/ui/color-picker'
-const Sidebar = () => {
-  const generateRandomColors = (count) => {
-    const colors = new Set()
-    while (colors.size < count) {
-      const color = `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`
-      colors.add(color)
-    }
-    return Array.from(colors)
-  }
-
-  const colors = useMemo(() => generateRandomColors(sidebarMenuItem.length), [])
-
-  const [isSidebar, setIsSidebar] = useState(true)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [newProject, setNewProject] = useState({
-    title: '',
-    description: '',
-    owner: '',
-    members: '',
-    color: '',
-  })
-
-  const addProject = () => {
-    console.log('newProject:- ', newProject)
-  }
+import SidebarHandler from './SidebarFunctions.jsx'
+const Sidebar = ({ updateProject }) => {
+  const {
+    isSidebar,
+    setIsSidebar,
+    isModalOpen,
+    handleColorCode,
+    addProject,
+    newProject,
+    setNewProject,
+    setIsModalOpen,
+    projects,
+    handleProjectDetails,
+  } = SidebarHandler(updateProject)
 
   return (
     <>
@@ -93,11 +82,8 @@ const Sidebar = () => {
                 isOpen={isModalOpen}
                 setIsOpen={setIsModalOpen}
               >
-                <Text fontWeight={'medium'} mb={2}>
-                  Add Priority
-                </Text>
                 <HStack>
-                  <Colorpicker />
+                  <Colorpicker colorCode={handleColorCode} />
                 </HStack>
               </Modal>
               <button onClick={() => setIsModalOpen(true)}>
@@ -105,15 +91,19 @@ const Sidebar = () => {
               </button>
             </div>
             <div className='myProjectItems'>
-              {myProjectsitems.map((item, index) => (
-                <div className='myProjectItem' key={index}>
+              {projects?.map((item, index) => (
+                <div
+                  onClick={() => handleProjectDetails(item._id)}
+                  className='myProjectItem'
+                  key={index}
+                >
                   <span
                     className='myProjectColor'
                     style={{
-                      backgroundColor: colors[index],
+                      backgroundColor: item.color,
                     }}
                   ></span>
-                  <p className='myProjectText'>{item}</p>
+                  <p className='myProjectText'>{item.title}</p>
                 </div>
               ))}
             </div>

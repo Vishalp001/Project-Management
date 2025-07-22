@@ -13,8 +13,9 @@ function App() {
       <Provider>
         <BrowserRouter>
           <Routes>
+            <Route path='/' element={<Home />} />
             <Route
-              path='/'
+              path='/:projectId'
               element={
                 <PrivateRoute>
                   <Home />

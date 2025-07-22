@@ -43,7 +43,6 @@ export default function VerifyLogin() {
     }
   }, [])
 
-  console.log('UID:- ', user.uid)
   useEffect(() => {
     if (!user.uid) return // wait until uid is available
 
@@ -52,16 +51,12 @@ export default function VerifyLogin() {
         const response = await axios.get(
           `http://localhost:5001/api/user/${user.uid}`
         )
-        console.log('Response:- ', response)
 
         if (response.data) {
-          console.log('Try code executed')
           setNewUser(false)
-          console.log('response.data:- ', response.data)
           localStorage.setItem('user', JSON.stringify(response.data))
           navigate('/')
         } else {
-          console.log('User not found, showing name input')
           setNewUser(true)
         }
       } catch (error) {
@@ -72,8 +67,6 @@ export default function VerifyLogin() {
 
     fetchUser()
   }, [user.uid])
-
-  console.log('New User :-' + newUser)
 
   const createAccount = async (e) => {
     e.preventDefault()
@@ -95,7 +88,6 @@ export default function VerifyLogin() {
       const response = await axios.post('http://localhost:5001/api/user', {
         payload,
       })
-      console.log('response', response)
       localStorage.setItem('user', JSON.stringify(response.data))
       navigate('/')
     } catch (error) {
