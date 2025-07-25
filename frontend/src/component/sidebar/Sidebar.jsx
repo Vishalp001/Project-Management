@@ -1,13 +1,10 @@
-import React from 'react'
 import './sidebar.scss'
 import logo from '../../assets/logo.svg'
 import arrow from '../../assets/logos/arrow.svg'
 import addProjects from '../../assets/logos/addProjects.svg'
 import { sidebarMenuItem } from './sidebarConstants'
-import Modal from '../../components/modals/Modal'
-import { HStack, Text } from '@chakra-ui/react'
-import { Colorpicker } from '../../components/ui/color-picker'
 import SidebarHandler from './SidebarFunctions.jsx'
+import AddEditProject from '../modals/addEditProject/AddEditProject.jsx'
 const Sidebar = ({ updateProject }) => {
   const {
     isSidebar,
@@ -21,7 +18,7 @@ const Sidebar = ({ updateProject }) => {
     projects,
     handleProjectDetails,
   } = SidebarHandler(updateProject)
-
+  console.log(projects)
   return (
     <>
       {isSidebar ? (
@@ -55,7 +52,7 @@ const Sidebar = ({ updateProject }) => {
           <div className='myProjectMenu'>
             <div className='header'>
               <h2>MY PROJECTS</h2>
-              <Modal
+              <AddEditProject
                 title='Create Project'
                 fields={[
                   {
@@ -65,14 +62,6 @@ const Sidebar = ({ updateProject }) => {
                     onChange: (val) =>
                       setNewProject((prev) => ({ ...prev, title: val })),
                   },
-                  {
-                    label: 'Add Description',
-                    placeholder: 'Enter Description',
-                    value: newProject.description,
-                    type: 'textarea',
-                    onChange: (val) =>
-                      setNewProject((prev) => ({ ...prev, description: val })),
-                  },
                 ]}
                 onSave={addProject}
                 onCancel={() => {
@@ -81,11 +70,8 @@ const Sidebar = ({ updateProject }) => {
                 }}
                 isOpen={isModalOpen}
                 setIsOpen={setIsModalOpen}
-              >
-                <HStack>
-                  <Colorpicker colorCode={handleColorCode} />
-                </HStack>
-              </Modal>
+                colorCode={handleColorCode}
+              />
               <button onClick={() => setIsModalOpen(true)}>
                 <img src={addProjects} alt='' />
               </button>
@@ -103,7 +89,7 @@ const Sidebar = ({ updateProject }) => {
                       backgroundColor: item.color,
                     }}
                   ></span>
-                  <p className='myProjectText'>{item.title}</p>
+                  <p className='myProjectText'>{item?.title}</p>
                 </div>
               ))}
             </div>

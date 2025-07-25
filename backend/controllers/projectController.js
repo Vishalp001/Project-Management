@@ -48,9 +48,11 @@ export async function getProjectById(req, res) {
 
 export async function updateProject(req, res) {
   try {
-    const project = await Project.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    })
+    const project = await Project.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    )
     if (!project) return res.status(404).json({ error: 'Project not found' })
     res.status(200).json(project)
   } catch (err) {

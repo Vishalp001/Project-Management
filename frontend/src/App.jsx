@@ -13,7 +13,14 @@ function App() {
       <Provider>
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<Home />} />
+            <Route
+              path='/'
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
             <Route
               path='/:projectId'
               element={

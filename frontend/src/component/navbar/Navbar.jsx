@@ -15,8 +15,8 @@ const Navbar = () => {
   const getInitials = (name = '') => {
     const names = name.trim().split(' ')
     if (names.length === 0) return ''
-    if (names.length === 1) return names[0][0].toUpperCase()
-    return (names[0][0] + names[names.length - 1][0]).toUpperCase()
+    if (names.length === 1) return names[0][0]?.toUpperCase()
+    return (names[0][0] + names[names?.length - 1][0])?.toUpperCase()
   }
 
   return (
@@ -32,8 +32,8 @@ const Navbar = () => {
           <img src={notification} alt='' />
         </div>
         <div className='profile'>
-          <p className='profile__name'>{user.displayName}</p>
-          <p className='profile__image'>{getInitials(user.displayName)}</p>
+          <p className='profile__name'>{user?.displayName}</p>
+          <p className='profile__image'>{getInitials(user?.displayName)}</p>
           <Menu.Root>
             <Menu.Trigger asChild>
               <Button as={'p'} variant='plain' size='sm'>

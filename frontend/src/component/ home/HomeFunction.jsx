@@ -1,17 +1,37 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   createTask,
   updateTaskStatus,
   getTaskByProjectIdApi,
 } from '../../api/task.api'
-
+import {
+  deletProjectApi,
+  getOwnerProjectApi,
+  updateProjectApi,
+} from '../../api/apiProject'
 const HomeHandler = () => {
   const user = JSON.parse(localStorage.getItem('user') || 'null')
   const navigate = useNavigate()
   const { projectId } = useParams()
   const [updateProject, setUpdateProject] = useState(null)
+  const [isDeletModalOpen, setIsDeletModalOpen] = useState(false)
+  const [isEditModalOpen, setEditIsModalOpen] = useState(false)
+  const [getColor, setGetColor] = useState('#eb5e41')
+
+  const initialProjectState = {
+    title: '',
+    members: [],
+    color: getColor,
+    tasks: [],
+  }
+  const [editProject, setEditProject] = useState(initialProjectState)
+
+  const handleColorCode = (data) => {
+    setGetColor(data)
+    setEditProject((prev) => ({ ...prev, color: data }))
+  }
 
   const [columns, setColumns] = useState({
     'To Do': [],
@@ -87,7 +107,7 @@ const HomeHandler = () => {
     const newCardData = {
       ...newCard,
       project: projectId,
-      owner: user._id,
+      owner: user?._id,
     }
     const res = await createTask(newCardData)
     if (res.status === 201) {
@@ -122,6 +142,29 @@ const HomeHandler = () => {
 
   const [projectDetails, setProjectDetails] = useState(null)
 
+  const openEditProjectModal = async () => {
+    if (!projectDetails) return
+    setEditIsModalOpen(true)
+    const project = projectDetails || {}
+    setEditProject({
+      title: project?.title ?? '',
+      color: project?.color ?? '#eb5e41',
+    })
+  }
+
+  const handleEditProject = async () => {
+    try {
+      const res = await updateProjectApi(projectId, editProject)
+      console.log(res, 'Project updated successfully')
+      if (res.status === 200) {
+        setProjectDetails(res.data)
+        setEditIsModalOpen(false)
+      }
+    } catch (error) {
+      console.log(error, 'Error editing project')
+    }
+  }
+
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
@@ -147,11 +190,8 @@ const HomeHandler = () => {
 
   const handleDeletProject = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/api/projects/${id}`)
-
-      const response = await axios.get(
-        `http://localhost:5001/api/projects/owner/${user._id}`
-      )
+      await deletProjectApi(id)
+      const response = await getOwnerProjectApi(user?._id)
 
       if (response.status === 200) {
         const remainingProject = response.data
@@ -169,6 +209,7 @@ const HomeHandler = () => {
       setUpdateProject(null)
     }
   }
+
   return {
     handleDragStart,
     handleDragEnd,
@@ -181,6 +222,15 @@ const HomeHandler = () => {
     newCard,
     setNewCard,
     columns,
+    isDeletModalOpen,
+    setIsDeletModalOpen,
+    isEditModalOpen,
+    setEditIsModalOpen,
+    openEditProjectModal,
+    handleEditProject,
+    handleColorCode,
+    editProject,
+    setEditProject,
   }
 }
 

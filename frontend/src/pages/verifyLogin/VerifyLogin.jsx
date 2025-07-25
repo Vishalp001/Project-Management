@@ -32,8 +32,8 @@ export default function VerifyLogin() {
         .then((result) => {
           window.localStorage.removeItem('emailForSignIn')
           setuser({
-            uid: result.user.uid,
-            email: result.user.email,
+            uid: result.user?.uid,
+            email: result.user?.email,
             lastLoginAt: new Date(result.user.metadata.lastSignInTime),
           })
         })
@@ -44,7 +44,7 @@ export default function VerifyLogin() {
   }, [])
 
   useEffect(() => {
-    if (!user.uid) return // wait until uid is available
+    if (!user.uid) return
 
     const fetchUser = async () => {
       try {
