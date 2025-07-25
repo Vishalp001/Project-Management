@@ -19,6 +19,7 @@ const Modal = ({
   isOpen,
   setIsOpen,
   children,
+  size = 'md',
 }) => {
   const ref = useRef(null)
 
@@ -28,13 +29,14 @@ const Modal = ({
   }
 
   const handleCancel = () => {
-    onCancel?.() // run any cancel logic
-    setIsOpen(false) // close the modal
+    onCancel?.()
+    setIsOpen(false)
   }
 
   return (
     <Stack zIndex={100}>
       <Dialog.Root
+        size={size}
         open={isOpen}
         onOpenChange={setIsOpen}
         placement={'center'}

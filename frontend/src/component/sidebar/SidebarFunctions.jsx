@@ -12,7 +12,7 @@ const SidebarHandler = (updateProject) => {
   const fetchOwnerProjects = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5001/api/projects/owner/${user._id}`
+        `http://localhost:5001/api/projects/owner/${user?._id}`
       )
       if (response.status === 200) {
         setProjects(response.data)
@@ -38,8 +38,7 @@ const SidebarHandler = (updateProject) => {
 
   const initialProjectState = {
     title: '',
-    description: '',
-    owner: user._id,
+    owner: user?._id,
     members: [],
     color: getColor,
     tasks: [],

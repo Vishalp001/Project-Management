@@ -21,6 +21,7 @@ import edit from '../../assets/logos/edit.svg'
 import link from '../../assets/logos/link.svg'
 import { MdDeleteOutline } from 'react-icons/md'
 import HomeHandler from './HomeFunction'
+import AddEditProject from '../modals/addEditProject/AddEditProject'
 
 const Home = () => {
   const {
@@ -35,6 +36,15 @@ const Home = () => {
     updateProject,
     setNewCard,
     columns,
+    isDeletModalOpen,
+    setIsDeletModalOpen,
+    isEditModalOpen,
+    setEditIsModalOpen,
+    handleEditProject,
+    handleColorCode,
+    openEditProjectModal,
+    editProject,
+    setEditProject,
   } = HomeHandler()
   return (
     <>
@@ -115,6 +125,38 @@ const Home = () => {
             </Badge>
           </HStack>
         </Modal>
+        <Modal
+          size={'xs'}
+          title='Are you sure you want to delete this project?'
+          onSave={() => handleDeletProject(projectDetails?._id)}
+          // onCancel={() => {
+          //   console.log('Modal cancelled')
+          //   setNewCard({ title: '', description: '' })
+          // }}
+          isOpen={isDeletModalOpen}
+          setIsOpen={setIsDeletModalOpen}
+        ></Modal>
+
+        <AddEditProject
+          title='Edit Project'
+          fields={[
+            {
+              label: 'Add Title',
+              placeholder: 'Enter Title',
+              value: editProject?.title,
+              onChange: (val) =>
+                setEditProject((prev) => ({ ...prev, title: val })),
+            },
+          ]}
+          onSave={handleEditProject}
+          onCancel={() => {
+            setEditProject({ title: '' })
+            // optional: reset form
+          }}
+          isOpen={isEditModalOpen}
+          setIsOpen={setEditIsModalOpen}
+          colorCode={handleColorCode}
+        />
         <Sidebar updateProject={updateProject} />
         <div className='homeContainer'>
           <Navbar />
@@ -135,11 +177,17 @@ const Home = () => {
                       {projectDetails?.title || 'Loading...'}
                     </Text>
                     <HStack gap={'1rem'}>
-                      <img src={edit} alt='edit' />
+                      <img
+                        onClick={() =>
+                          openEditProjectModal(projectDetails?._id)
+                        }
+                        src={edit}
+                        alt='edit'
+                      />
                       <img src={link} alt='link' />
                       <Stack
                         cursor={'pointer'}
-                        onClick={() => handleDeletProject(projectDetails?._id)}
+                        onClick={() => setIsDeletModalOpen(true)}
                         bg='#DCD6FA'
                         p='5px'
                         borderRadius='25%'
