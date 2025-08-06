@@ -1,4 +1,3 @@
-// Project Schema
 import mongoose, { model } from 'mongoose'
 const { Schema } = mongoose
 

@@ -1,18 +1,20 @@
 import { Router } from 'express'
 const router = Router()
 import {
-  createOrUpdateUser,
+  registerUser,
   getAllUsers,
-  getUserById,
   updateUser,
   getUserByUid,
   deleteUser,
+  loginUser,
+  getUserById,
 } from '../controllers/userController.js'
 
-router.post('/', createOrUpdateUser)
+router.post('/register', registerUser)
+router.post('/login', loginUser)
 router.get('/', getAllUsers)
 router.get('/:uid', getUserByUid)
-// router.get('/:id', getUserById)
+router.get('/:id', getUserById)
 router.put('/:id', updateUser)
 router.delete('/:id', deleteUser)
 

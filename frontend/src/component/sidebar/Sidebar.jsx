@@ -18,7 +18,6 @@ const Sidebar = ({ updateProject }) => {
     projects,
     handleProjectDetails,
   } = SidebarHandler(updateProject)
-  console.log(projects)
   return (
     <>
       {isSidebar ? (

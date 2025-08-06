@@ -8,6 +8,7 @@ import projectRoutes from './routes/projectRoutes.js'
 import taskRoutes from './routes/taskRoutes.js'
 import commentRoutes from './routes/commentRoutes.js'
 import fileRoutes from './routes/fileRoutes.js'
+import inviteRoutes from './routes/invitationRoutes.js'
 
 const app = express()
 app.use(cors())
@@ -18,5 +19,6 @@ app.use('/api/projects', projectRoutes)
 app.use('/api/tasks', taskRoutes)
 app.use('/api/comments', commentRoutes)
 app.use('/api/files', fileRoutes)
+app.use('/api/invite', inviteRoutes)
 
 export default app
