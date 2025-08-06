@@ -5,6 +5,9 @@ import {
   Avatar,
   AvatarGroup,
   Stack,
+  Menu,
+  Button,
+  Portal,
 } from '@chakra-ui/react'
 import Sidebar from '../sidebar/Sidebar'
 import './home.scss'
@@ -22,6 +25,8 @@ import link from '../../assets/logos/link.svg'
 import { MdDeleteOutline } from 'react-icons/md'
 import HomeHandler from './HomeFunction'
 import AddEditProject from '../modals/addEditProject/AddEditProject'
+import TaskDetails from '../modals/taskDetails/TaskDetails'
+import InviteUser from '../inviteusers/InviteUser'
 
 const Home = () => {
   const {
@@ -45,7 +50,13 @@ const Home = () => {
     openEditProjectModal,
     editProject,
     setEditProject,
+    handleDeleteTask,
+    handleTaskDetails,
+    isTaskDetailsModalOpen,
+    setIsTaskDetailsModalOpen,
+    updateTask,
   } = HomeHandler()
+
   return (
     <>
       <div className='homeHeader'>
@@ -135,7 +146,7 @@ const Home = () => {
           // }}
           isOpen={isDeletModalOpen}
           setIsOpen={setIsDeletModalOpen}
-        ></Modal>
+        />
 
         <AddEditProject
           title='Edit Project'
@@ -156,6 +167,13 @@ const Home = () => {
           isOpen={isEditModalOpen}
           setIsOpen={setEditIsModalOpen}
           colorCode={handleColorCode}
+        />
+
+        <TaskDetails
+          updateTask={updateTask}
+          title='Project Details'
+          isOpen={isTaskDetailsModalOpen}
+          setIsOpen={setIsTaskDetailsModalOpen}
         />
         <Sidebar updateProject={updateProject} />
         <div className='homeContainer'>
@@ -197,33 +215,7 @@ const Home = () => {
                     </HStack>
                   </HStack>
                   <HStack className='homeHeaderRight'>
-                    <HStack>
-                      <img src={addCardImg} alt='addCard' />
-                      <Text color={'#5030E5'}>Invite</Text>
-                      <AvatarGroup gap='0' spaceX='-3' size='lg'>
-                        <Avatar.Root>
-                          <Avatar.Fallback name='Uchiha Sasuke' />
-                          <Avatar.Image src='https://cdn.myanimelist.net/r/84x124/images/characters/9/131317.webp?s=d4b03c7291407bde303bc0758047f6bd' />
-                        </Avatar.Root>
-
-                        <Avatar.Root>
-                          <Avatar.Fallback name='Baki Ani' />
-                          <Avatar.Image src='https://cdn.myanimelist.net/r/84x124/images/characters/7/284129.webp?s=a8998bf668767de58b33740886ca571c' />
-                        </Avatar.Root>
-
-                        <Avatar.Root>
-                          <Avatar.Fallback name='Uchiha Chan' />
-                          <Avatar.Image src='https://cdn.myanimelist.net/r/84x124/images/characters/9/105421.webp?s=269ff1b2bb9abe3ac1bc443d3a76e863' />
-                        </Avatar.Root>
-                        <Avatar.Root
-                          color={'#D25B68'}
-                          bg={'#F4D7DA'}
-                          variant='solid'
-                        >
-                          <Avatar.Fallback>+3</Avatar.Fallback>
-                        </Avatar.Root>
-                      </AvatarGroup>
-                    </HStack>
+                    <InviteUser projectDetails={projectDetails} />
                   </HStack>
                 </HStack>
                 <div className='columnContainer'>
@@ -276,84 +268,139 @@ const Home = () => {
                               .reverse()
                               .map((card) => (
                                 <Draggable id={card._id} key={card._id}>
-                                  <div className='card'>
-                                    <div className='cardHeader'>
-                                      <Badge
-                                        cursor={'pointer'}
-                                        p={'5px 10px'}
-                                        fontWeight={600}
-                                        bg={
-                                          card.priority === 'Low'
-                                            ? '#F9EEE3'
-                                            : card.priority === 'High'
-                                            ? '#FBF1F2'
-                                            : '#F0F4FF'
-                                        }
-                                        color={
-                                          card.priority === 'Low'
-                                            ? '#D58D49'
-                                            : card.priority === 'High'
-                                            ? '#D8727D'
-                                            : '#4B7BE5'
-                                        }
+                                  {({ listeners, attributes }) => (
+                                    <Stack
+                                      onClick={() =>
+                                        handleTaskDetails(card._id)
+                                      }
+                                      className='card'
+                                    >
+                                      <div {...listeners} {...attributes}>
+                                        <div className='dragIcon' />
+                                      </div>
+
+                                      <div className='cardHeader'>
+                                        <Badge
+                                          cursor={'pointer'}
+                                          p={'5px 10px'}
+                                          fontWeight={600}
+                                          bg={
+                                            card.priority === 'Low'
+                                              ? '#F9EEE3'
+                                              : card.priority === 'High'
+                                              ? '#FBF1F2'
+                                              : '#F0F4FF'
+                                          }
+                                          color={
+                                            card.priority === 'Low'
+                                              ? '#D58D49'
+                                              : card.priority === 'High'
+                                              ? '#D8727D'
+                                              : '#4B7BE5'
+                                          }
+                                        >
+                                          {card.priority}
+                                        </Badge>
+
+                                        <Menu.Root>
+                                          <Menu.Trigger asChild>
+                                            <div
+                                              onPointerDown={(e) =>
+                                                e.stopPropagation()
+                                              }
+                                              onClick={(e) =>
+                                                e.stopPropagation()
+                                              }
+                                            >
+                                              <SlOptions cursor={'pointer'} />
+                                            </div>
+                                          </Menu.Trigger>
+                                          <Portal>
+                                            <Menu.Positioner>
+                                              <Menu.Content p={2}>
+                                                <Menu.Item
+                                                  p={2}
+                                                  cursor={'pointer'}
+                                                  _hover={{ bg: '#C4C4C4' }}
+                                                  onPointerDown={(e) =>
+                                                    e.stopPropagation()
+                                                  }
+                                                  onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    handleDeleteTask(card._id)
+                                                  }}
+                                                >
+                                                  Delete
+                                                </Menu.Item>
+                                              </Menu.Content>
+                                            </Menu.Positioner>
+                                          </Portal>
+                                        </Menu.Root>
+                                      </div>
+                                      <div
+                                      // onClick={(e) => {
+                                      //   e.stopPropagation()
+                                      //   console.log('dsds')
+                                      //   handleTaskDetails(card._id)
+                                      // }}
                                       >
-                                        {card.priority}
-                                      </Badge>
-                                      <SlOptions />
-                                    </div>
-                                    <h3 className='title'>{card.title}</h3>
-                                    <p className='desc'>{card.description}</p>
-                                    <div className='cardFooter'>
-                                      <div className='profile'>
-                                        <img
-                                          src='https://i.pravatar.cc/150?img=3'
-                                          alt='profile'
-                                        />
-                                        <img
-                                          src='https://i.pravatar.cc/150?img=4'
-                                          alt='profile'
-                                        />
-                                        <img
-                                          src='https://i.pravatar.cc/150?img=5'
-                                          alt='profile'
-                                        />
+                                        <h3 className='title'>{card.title}</h3>
+                                        <p className='desc'>
+                                          {card.description}
+                                        </p>
                                       </div>
-                                      <div className='fileAndComment'>
-                                        <div className='comment'>
-                                          <img src={comment} alt='comments' />
-                                          <Text>12 </Text>
-                                          <Text
-                                            whiteSpace='nowrap'
-                                            overflow='hidden'
-                                            textOverflow='ellipsis'
-                                            maxW='80px'
-                                            display={{
-                                              base: 'none',
-                                              sm: 'block',
-                                            }}
-                                          >
-                                            comments
-                                          </Text>
+                                      <div className='cardFooter'>
+                                        <div className='profile'>
+                                          <img
+                                            src='https://i.pravatar.cc/150?img=3'
+                                            alt='profile'
+                                          />
+                                          <img
+                                            src='https://i.pravatar.cc/150?img=4'
+                                            alt='profile'
+                                          />
+                                          <img
+                                            src='https://i.pravatar.cc/150?img=5'
+                                            alt='profile'
+                                          />
                                         </div>
-                                        <div className='file'>
-                                          <img src={files} alt='files' />
-                                          <Text>12 </Text>
-                                          <Text
-                                            whiteSpace='nowrap'
-                                            overflow='hidden'
-                                            textOverflow='ellipsis'
-                                            maxW='80px'
-                                            display={{
-                                              base: 'none',
-                                              sm: 'block',
-                                            }}
-                                          >
-                                            files
-                                          </Text>
+                                        <div className='fileAndComment'>
+                                          <div className='comment'>
+                                            <img src={comment} alt='comments' />
+                                            <Text>12 </Text>
+                                            <Text
+                                              whiteSpace='nowrap'
+                                              overflow='hidden'
+                                              textOverflow='ellipsis'
+                                              maxW='80px'
+                                              display={{
+                                                base: 'none',
+                                                sm: 'block',
+                                              }}
+                                            >
+                                              comments
+                                            </Text>
+                                          </div>
+                                          <div className='file'>
+                                            <img src={files} alt='files' />
+                                            <Text>12 </Text>
+                                            <Text
+                                              whiteSpace='nowrap'
+                                              overflow='hidden'
+                                              textOverflow='ellipsis'
+                                              maxW='80px'
+                                              display={{
+                                                base: 'none',
+                                                sm: 'block',
+                                              }}
+                                            >
+                                              files
+                                            </Text>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  </div>
+                                    </Stack>
+                                  )}
                                 </Draggable>
                               ))}
                           </div>

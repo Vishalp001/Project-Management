@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   createTask,
-  updateTaskStatus,
+  updateTaskStatusApi,
   getTaskByProjectIdApi,
+  deleteTaskApi,
 } from '../../api/task.api'
 import {
   deletProjectApi,
@@ -70,7 +71,7 @@ const HomeHandler = () => {
 
     // 🔥 Persist to backend
     try {
-      await updateTaskStatus(activeId, over.id)
+      await updateTaskStatusApi(activeId, over.id)
     } catch (err) {
       console.error('Failed to update task status:', err)
     }
@@ -210,6 +211,52 @@ const HomeHandler = () => {
     }
   }
 
+  const handleDeleteTask = async (cardId) => {
+    console.log('cardId')
+    try {
+      const res = await deleteTaskApi(cardId)
+      if (res.status === 200 || res.status === 204) {
+        setColumns((prev) => {
+          const updated = { ...prev }
+          Object.keys(updated).forEach((key) => {
+            updated[key] = updated[key].filter((item) => item._id !== cardId)
+          })
+          return updated
+        })
+      }
+    } catch (error) {
+      console.error('Error deleting card', error)
+    }
+  }
+
+  const [isTaskDetailsModalOpen, setIsTaskDetailsModalOpen] = useState(false)
+
+  const [updateTask, setUpdateTask] = useState({
+    title: '',
+    description: '',
+    priority: 'Low',
+    project: '',
+    assignedUsers: [],
+  })
+
+  const handleTaskDetails = async (cardId) => {
+    setIsTaskDetailsModalOpen(true)
+    for (const columnName in columns) {
+      const task = columns[columnName].find((item) => item._id === cardId)
+      if (task) {
+        setUpdateTask((prev) => ({
+          ...prev,
+          title: task.title,
+          description: task.description,
+          priority: task.priority,
+          project: task.project,
+          assignedUsers: task.assignedUsers,
+        }))
+        break
+      }
+    }
+  }
+
   return {
     handleDragStart,
     handleDragEnd,
@@ -231,6 +278,11 @@ const HomeHandler = () => {
     handleColorCode,
     editProject,
     setEditProject,
+    handleDeleteTask,
+    handleTaskDetails,
+    isTaskDetailsModalOpen,
+    setIsTaskDetailsModalOpen,
+    updateTask,
   }
 }
 

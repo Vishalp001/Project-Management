@@ -7,10 +7,12 @@ import Register from './pages/register/Register'
 import VerifyLogin from './pages/verifyLogin/VerifyLogin'
 import { AuthProvider } from './context/AuthContext'
 import PrivateRoute from './component/PrivateRoute'
+import { ToastContainer } from 'react-toastify'
 function App() {
   return (
     <AuthProvider>
       <Provider>
+        <ToastContainer />
         <BrowserRouter>
           <Routes>
             <Route
