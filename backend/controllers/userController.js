@@ -1,5 +1,5 @@
 import User from '../models/User.js'
-
+import bcrypt from 'bcrypt'
 export const registerUser = async (req, res) => {
   try {
     const { email, password, name, photoURL } = req.body
@@ -44,7 +44,10 @@ export const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email })
-    if (!user) return res.status(404).json({ message: 'User not found' })
+    if (!user)
+      return res
+        .status(404)
+        .json({ message: 'Hmm... we can’t find you. Did you mean to sign up?' })
 
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) return res.status(401).json({ message: 'Invalid password' })

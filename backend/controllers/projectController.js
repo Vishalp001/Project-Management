@@ -1,5 +1,5 @@
 import Project from '../models/Project.js'
-
+import Task from '../models/Task.js'
 export async function createProject(req, res) {
   try {
     const project = await Project.create(req.body)
@@ -63,6 +63,8 @@ export async function updateProject(req, res) {
 export async function deleteProject(req, res) {
   try {
     const project = await Project.findByIdAndDelete(req.params.id)
+    await Task.deleteMany({ project: req.params.id })
+
     if (!project) return res.status(404).json({ error: 'Project not found' })
     res.status(204).send()
   } catch (err) {

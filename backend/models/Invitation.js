@@ -6,7 +6,6 @@ const InvitationSchema = new Schema(
   {
     email: { type: String, required: true },
     project: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
-    token: { type: String, required: true },
     status: { type: String, enum: ['pending', 'accepted'], default: 'pending' },
     invitedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   },
