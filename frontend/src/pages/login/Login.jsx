@@ -1,30 +1,52 @@
 import './login.scss'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { auth } from '../../firebase'
-import { sendSignInLinkToEmail } from 'firebase/auth'
 
-import { HStack, Separator, Text, VStack } from '@chakra-ui/react'
-import login from '../../assets/login.svg'
+import {
+  Button,
+  HStack,
+  Separator,
+  Spinner,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
+import loginSvg from '../../assets/login.svg'
 import { FaArrowRightLong } from 'react-icons/fa6'
 import { FcGoogle } from 'react-icons/fc'
-
-const actionCodeSettings = {
-  url: 'http://localhost:5173/verify', // change this for production
-  handleCodeInApp: true,
-}
+import { loginApi } from '../../api/user.api'
+import { useAuth } from '../../context/AuthContext'
+import { toast } from 'react-toastify'
 
 const Login = () => {
-  const [email, setEmail] = useState('')
+  const { login } = useAuth()
+  const navigate = useNavigate()
+
+  const [userDeatails, setUserDetails] = useState({
+    email: '',
+    password: '',
+  })
+  const [loading, setLoading] = useState(false)
 
   const handleLogin = async (e) => {
     e.preventDefault()
+    setLoading(true)
+
     try {
-      await sendSignInLinkToEmail(auth, email, actionCodeSettings)
-      window.localStorage.setItem('emailForSignIn', email)
-      alert('Login link sent! Check your inbox.')
+      const res = await loginApi(userDeatails)
+      if (res.status === 200) {
+        login(res.data.user)
+        setLoading(false)
+        navigate('/')
+        toast(res.data.message, {
+          type: 'success',
+        })
+      }
     } catch (error) {
-      console.error('Error sending link:', error.message)
+      setLoading(false)
+      toast(error.response.data.message, {
+        type: 'error',
+      })
+      console.log(error.response.data.message)
     }
   }
 
@@ -33,27 +55,53 @@ const Login = () => {
       <div className='colOne'>
         <div className='form'>
           <div>
-            <h2>Enter your email to access your workspace</h2>
+            <h2>Enter your credentials to access your workspace.</h2>
             <Text textAlign={'center'}>
-              We'll send you a magic link to log in.
+              Fast lane to your workspace—enter and you’re in.
             </Text>
           </div>
           <form action=''>
             <VStack className='inputGroup'>
               <label htmlFor='email'>Email</label>
               <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={userDeatails.email}
+                onChange={(e) =>
+                  setUserDetails((prev) => ({ ...prev, email: e.target.value }))
+                }
                 type='email'
                 id='email'
                 placeholder='Enter your email'
               />
             </VStack>
 
-            <HStack justifyContent={'space-between'} flexWrap={'wrap'} w='100%'>
-              <button onClick={handleLogin} className='signInButton'>
-                Sign In <FaArrowRightLong />
-              </button>
+            <VStack className='inputGroup'>
+              <label htmlFor='password'>Password</label>
+              <input
+                value={userDeatails.password}
+                onChange={(e) =>
+                  setUserDetails((prev) => ({
+                    ...prev,
+                    password: e.target.value,
+                  }))
+                }
+                type='password'
+                id='password'
+                placeholder='Enter your password'
+              />
+            </VStack>
+
+            <HStack flexWrap={'wrap'} justifyContent={'space-between'} w='100%'>
+              <Button
+                w={'170px'}
+                onClick={handleLogin}
+                className='signInButton'
+              >
+                <span>{loading ? <Spinner /> : 'Sign In'}</span>{' '}
+                <FaArrowRightLong />
+              </Button>
+              <Text mt={'10px'} className='loginLink'>
+                Create a new account? <Link to='/register'>Sign Up</Link>
+              </Text>
             </HStack>
           </form>
           <div className='separator'>
@@ -70,7 +118,7 @@ const Login = () => {
         </div>
       </div>
       <div className='colTwo'>
-        <img src={login} alt='login image' />
+        <img src={loginSvg} alt='login image' />
       </div>
     </HStack>
   )

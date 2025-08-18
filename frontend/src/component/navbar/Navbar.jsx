@@ -33,7 +33,7 @@ const Navbar = () => {
         </div>
         <div className='profile'>
           <p className='profile__name'>{user?.displayName}</p>
-          <p className='profile__image'>{getInitials(user?.displayName)}</p>
+          <p className='profile__image'>{getInitials(user?.name)}</p>
           <Menu.Root>
             <Menu.Trigger asChild>
               <Button as={'p'} variant='plain' size='sm'>

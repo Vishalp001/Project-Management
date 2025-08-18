@@ -140,10 +140,6 @@ const Home = () => {
           size={'xs'}
           title='Are you sure you want to delete this project?'
           onSave={() => handleDeletProject(projectDetails?._id)}
-          // onCancel={() => {
-          //   console.log('Modal cancelled')
-          //   setNewCard({ title: '', description: '' })
-          // }}
           isOpen={isDeletModalOpen}
           setIsOpen={setIsDeletModalOpen}
         />

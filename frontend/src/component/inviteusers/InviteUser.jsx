@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import addCardImg from '../../assets/logos/addCard.svg'
 import {
   Avatar,
@@ -13,7 +13,6 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { inviteUserApi } from '../../api/invite.api'
-// import { toaster } from '../../components/ui/toaster'
 import { toast } from 'react-toastify'
 
 const InviteUser = ({ projectDetails }) => {
@@ -37,7 +36,7 @@ const InviteUser = ({ projectDetails }) => {
       }
     } catch (error) {
       console.log(error)
-      toast(error.message, {
+      toast(error.response.data.message, {
         type: 'error',
       })
       setInviteLoader(false)

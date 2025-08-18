@@ -1,4 +1,3 @@
-import crypto from 'crypto'
 import Invitation from '../models/Invitation.js'
 import Project from '../models/Project.js'
 import sendEmail from '../utils/sendEmail.js'
@@ -6,25 +5,29 @@ import sendEmail from '../utils/sendEmail.js'
 export const inviteCollaborator = async (req, res) => {
   try {
     const { email, projectId, invitedBy } = req.body
-
-    const token = crypto.randomBytes(20).toString('hex')
-
+    console.log(email, projectId, invitedBy, `inviteCollaborator`)
     const existing = await Invitation.findOne({
       email,
       project: projectId,
       status: 'pending',
     })
+    console.log(existing, 'existing invitation')
     if (existing)
       return res.status(400).json({ message: 'Invitation already sent' })
 
     const invitation = await Invitation.create({
       email,
       project: projectId,
-      token,
       invitedBy,
     })
+    console.log(invitation, 'invitation')
 
-    const inviteLink = `${process.env.CLIENT_URL}/accept-invite/${token}`
+    const inviteLink = `${process.env.CLIENT_URL}/accept-invite/${email}`
+
+    console.log(inviteLink, 'invite link')
+    const addMember = await Project.findById(projectId)
+    addMember.members.push(invitation._id)
+    await addMember.save()
 
     const html = `<div style="width: 100%">
       <p>
@@ -63,7 +66,9 @@ export const inviteCollaborator = async (req, res) => {
 
     await sendEmail(email, 'Project Invitation', html)
 
-    res.status(200).json({ message: 'Invitation sent successfully' })
+    res
+      .status(200)
+      .json({ message: 'Invitation sent successfully', data: res.data })
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Error sending invitation' })
@@ -71,16 +76,14 @@ export const inviteCollaborator = async (req, res) => {
 }
 
 export const acceptInvitation = async (req, res) => {
-  const { token } = req.body
   const user = req.user
 
   const invitation = await Invitation.findOne({
-    token,
     email: user.email,
     status: 'pending',
   })
   if (!invitation) {
-    return res.status(400).json({ message: 'Invalid or expired token' })
+    return res.status(400).json({ message: 'Invalid or expired email' })
   }
 
   const project = await Project.findById(invitation.project)

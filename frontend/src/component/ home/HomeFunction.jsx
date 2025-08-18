@@ -79,14 +79,15 @@ const HomeHandler = () => {
     setActiveId(null)
   }
 
-  const [newCard, setNewCard] = useState({
+  const initialCardState = {
     title: '',
     description: '',
     priority: 'Low',
     project: '',
     assignedUsers: [],
     owner: '',
-  })
+  }
+  const [newCard, setNewCard] = useState(initialCardState)
 
   // If you want to populate the columns:
   const populateColumn = (res) => {
@@ -118,6 +119,7 @@ const HomeHandler = () => {
         ...prev,
         [status]: [...prev[status], createdCard],
       }))
+      setNewCard(initialCardState)
     }
   }
 
