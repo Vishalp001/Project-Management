@@ -1,14 +1,4 @@
-import {
-  Badge,
-  HStack,
-  Text,
-  Avatar,
-  AvatarGroup,
-  Stack,
-  Menu,
-  Button,
-  Portal,
-} from '@chakra-ui/react'
+import { Badge, HStack, Text, Stack, Menu, Portal } from '@chakra-ui/react'
 import Sidebar from '../sidebar/Sidebar'
 import './home.scss'
 import Navbar from '../navbar/Navbar'
@@ -178,6 +168,7 @@ const Home = () => {
             {projectDetails !== null ? (
               <>
                 <HStack
+                  flexWrap={'wrap'}
                   mb={'20px'}
                   justifyContent={'space-between'}
                   alignItems={'center'}

@@ -3,6 +3,7 @@ import addCardImg from '../../assets/logos/addCard.svg'
 import {
   Avatar,
   AvatarGroup,
+  Badge,
   Button,
   HStack,
   Input,
@@ -33,6 +34,10 @@ const InviteUser = ({ projectDetails }) => {
         toast(res.data.message, {
           type: 'success',
         })
+        setInviteUser((prev) => ({
+          ...prev,
+          email: '',
+        }))
       }
     } catch (error) {
       console.log(error)
@@ -84,6 +89,26 @@ const InviteUser = ({ projectDetails }) => {
                   >
                     {inviteLoader ? <Spinner size='sm' /> : ' Invite User'}
                   </Button>
+                  {projectDetails?.members?.length > 0 &&
+                    projectDetails.members.map((member) => {
+                      return (
+                        <HStack key={member._id} w={'100%'}>
+                          <Avatar.Root>
+                            <Avatar.Fallback name={member.email} />
+                          </Avatar.Root>
+                          <Text>{member.email}</Text>
+                          <Badge
+                            px={2}
+                            variant='solid'
+                            colorPalette={
+                              member.status === 'pending' ? 'orange' : 'green'
+                            }
+                          >
+                            {member.status}
+                          </Badge>
+                        </HStack>
+                      )
+                    })}
                 </VStack>
               </Menu.Content>
             </Menu.Positioner>
