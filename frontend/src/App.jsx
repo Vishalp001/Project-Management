@@ -8,6 +8,7 @@ import VerifyLogin from './pages/verifyLogin/VerifyLogin'
 import { AuthProvider } from './context/AuthContext'
 import PrivateRoute from './component/PrivateRoute'
 import { ToastContainer } from 'react-toastify'
+import AcceptInvite from './pages/acceptInvite/AcceptInvite'
 function App() {
   return (
     <AuthProvider>
@@ -28,6 +29,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path='/accept-invite/:inviteToken'
+              element={
+                <PrivateRoute>
+                  <AcceptInvite />
                 </PrivateRoute>
               }
             />

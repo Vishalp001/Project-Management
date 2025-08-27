@@ -2,10 +2,7 @@ import apiClient from './apiClient'
 
 export const inviteUserApi = (data) => apiClient.post('/invite', data)
 
-// export const getTaskByProjectIdApi = (projectId) =>
-//   apiClient.get(`/tasks/${projectId}`)
+export const verifyInviteApi = (token, data) =>
+  apiClient.post(`/invite/getInviteUserDetails/${token}`, data)
 
-// export const updateTaskStatusApi = (taskId, status) =>
-//   apiClient.put(`/tasks/${taskId}`, { status })
-
-// export const deleteTaskApi = (cardId) => apiClient.delete(`/tasks/${cardId}`)
+export const acceptInviteApi = (data) => apiClient.patch('/invite/accept', data)

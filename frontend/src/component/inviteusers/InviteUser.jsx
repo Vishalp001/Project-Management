@@ -20,8 +20,8 @@ const InviteUser = ({ projectDetails }) => {
   const [inviteLoader, setInviteLoader] = useState(false)
   const [inviteUser, setInviteUser] = useState({
     email: '',
-    projectId: projectDetails?._id,
-    invitedBy: projectDetails?.owner?._id,
+    projectId: '',
+    invitedBy: '',
   })
 
   const handleInviteUser = async () => {
@@ -75,6 +75,8 @@ const InviteUser = ({ projectDetails }) => {
                       setInviteUser((prev) => ({
                         ...prev,
                         email: e.target.value,
+                        projectId: projectDetails?._id,
+                        invitedBy: projectDetails?.owner?._id,
                       }))
                     }
                   />

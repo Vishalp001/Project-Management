@@ -1,5 +1,5 @@
 import './login.scss'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 import {
@@ -19,8 +19,9 @@ import { toast } from 'react-toastify'
 
 const Login = () => {
   const { login } = useAuth()
+  const location = useLocation()
   const navigate = useNavigate()
-
+  const from = location.state?.from?.pathname || '/'
   const [userDeatails, setUserDetails] = useState({
     email: '',
     password: '',
@@ -36,7 +37,7 @@ const Login = () => {
       if (res.status === 200) {
         login(res.data.user)
         setLoading(false)
-        navigate('/')
+        navigate(from, { replace: true }) // Redirect to the page user was trying to access
         toast(res.data.message, {
           type: 'success',
         })

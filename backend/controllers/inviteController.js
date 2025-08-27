@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import Invitation from '../models/Invitation.js'
 import Project from '../models/Project.js'
 import sendEmail from '../utils/sendEmail.js'
@@ -5,26 +6,26 @@ import sendEmail from '../utils/sendEmail.js'
 export const inviteCollaborator = async (req, res) => {
   try {
     const { email, projectId, invitedBy } = req.body
-    console.log(email, projectId, invitedBy, `inviteCollaborator`)
+
+    const token = crypto.randomBytes(20).toString('hex')
+
     const existing = await Invitation.findOne({
       email,
       project: projectId,
       status: 'pending',
     })
-    console.log(existing, 'existing invitation')
     if (existing)
       return res.status(400).json({ message: 'Invitation already sent' })
 
     const invitation = await Invitation.create({
       email,
       project: projectId,
+      token,
       invitedBy,
     })
-    console.log(invitation, 'invitation')
 
-    const inviteLink = `${process.env.CLIENT_URL}/accept-invite/${email}`
+    const inviteLink = `${process.env.CLIENT_URL}/accept-invite/${token}`
 
-    console.log(inviteLink, 'invite link')
     const addMember = await Project.findById(projectId)
     addMember.members.push(invitation._id)
     await addMember.save()
@@ -76,24 +77,68 @@ export const inviteCollaborator = async (req, res) => {
 }
 
 export const acceptInvitation = async (req, res) => {
-  const user = req.user
+  const { token } = req.body
 
-  const invitation = await Invitation.findOne({
-    email: user.email,
-    status: 'pending',
-  })
-  if (!invitation) {
-    return res.status(400).json({ message: 'Invalid or expired email' })
+  try {
+    const invitation = await Invitation.findOne({
+      token,
+    })
+    if (!invitation) {
+      return res.status(400).json({ message: 'Invalid or expired token' })
+    }
+
+    invitation.status = 'accepted'
+    await invitation.save()
+
+    res
+      .status(200)
+      .json({ message: 'Successfully joined the project', invitation })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Server error' })
   }
+}
 
-  const project = await Project.findById(invitation.project)
-  if (!project.members.includes(user._id)) {
-    project.members.push(user._id)
-    await project.save()
+// GET /accept-invite/:token
+export const getInviteUserDetails = async (req, res) => {
+  try {
+    const { token } = req.params
+    const { email } = req.body
+
+    const invitation = await Invitation.findOne({
+      token,
+    }).populate('project invitedBy')
+
+    if (!invitation) {
+      return res.status(400).json({
+        message:
+          '😬 This invite is playing hide and seek… but it’s gone. Ping the project owner for a new one!',
+      })
+    }
+
+    // check if logged-in user email matches the invitation email
+    if (invitation.email !== email) {
+      return res.status(403).json({
+        message: `This invite was sent to ${invitation.email}, but you’re logged in as ${email}. Please log in with the correct account to accept this invite.`,
+        email: invitation.email,
+      })
+    }
+
+    if (invitation.status === 'accepted') {
+      return res.status(200).json({
+        message:
+          '✅ You’ve already joined this project. No need to accept the invite again!',
+        status: invitation.status,
+      })
+    }
+
+    res.status(200).json({
+      message: 'User fetch successful',
+      invitation,
+      status: invitation.status,
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Server error' })
   }
-
-  invitation.status = 'accepted'
-  await invitation.save()
-
-  res.status(200).json({ message: 'Successfully joined the project' })
 }
