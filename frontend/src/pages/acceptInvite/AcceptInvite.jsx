@@ -9,6 +9,12 @@ import { toast } from 'react-toastify'
 const AcceptInvite = () => {
   const [rightUser, setrightUser] = useState(true)
   const [wrongEmail, setwrongEmail] = useState('')
+  const [projectDetails, setprojectDetails] = useState({
+    projectName: '',
+    projectDescription: '',
+    inviterName: '',
+  })
+
   const navigate = useNavigate()
   const { logout } = useAuth()
 
@@ -19,7 +25,14 @@ const AcceptInvite = () => {
     const verifyInvite = async () => {
       try {
         const res = await verifyInviteApi(inviteToken, { email: user?.email })
-
+        console.log(res, 'res')
+        setprojectDetails({
+          projectName: res.data.invitation.project?.title ?? 'Untitled Project',
+          projectDescription:
+            res.data.invitation.project?.description ??
+            'No description available',
+          inviterName: res.data.invitation.invitedBy?.name ?? 'Unknown User',
+        })
         if (res.data.status === 'accepted') {
           toast('You have already accepted the invite', { type: 'info' })
           navigate('/')
@@ -39,7 +52,10 @@ const AcceptInvite = () => {
 
   const handleAcceptInvite = async () => {
     try {
-      const res = await acceptInviteApi({ token: inviteToken })
+      const res = await acceptInviteApi({
+        token: inviteToken,
+        email: user?.email,
+      })
       console.log(res.data.invitation.status, 'res')
       if (res.data.invitation.status === 'accepted') {
         toast('Invite accepted successfully', { type: 'success' })
@@ -76,8 +92,8 @@ const AcceptInvite = () => {
               fontSize={'22px'}
               color={'black'}
             >
-              <b> Sarha Johnson </b> invited you to the project <br /> "Strategy
-              2024"
+              <b> {projectDetails.inviterName} </b> invited you to the project{' '}
+              <br /> {projectDetails.projectName}
             </Text>
             <HStack w={'100%'} justifyContent={'center'}>
               <Text

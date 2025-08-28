@@ -25,6 +25,26 @@ export async function getMyProjects(req, res) {
   }
 }
 
+// Get projects where user is invited (as a member)
+export async function getInvitedProjects(req, res) {
+  try {
+    const userId = req.params.userId
+    const projects = await Project.find({ members: userId }).populate(
+      'owner members tasks' // Populate related fields
+    )
+    if (!projects || projects.length === 0) {
+      return res
+        .status(404)
+        .json({ error: 'No Invite projects found for this user' })
+    }
+    res.status(200).json(projects)
+
+    console.log(projects, 'invited projects')
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
 export async function getAllProjects(req, res) {
   try {
     const projects = await Project.find().populate('owner members tasks')

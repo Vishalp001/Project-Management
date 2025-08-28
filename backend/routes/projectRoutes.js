@@ -7,12 +7,14 @@ import {
   updateProject,
   deleteProject,
   getMyProjects,
+  getInvitedProjects,
 } from '../controllers/projectController.js'
 
 router.post('/', createProject)
+router.get('/owner/:ownerId', getMyProjects)
+router.get('/invite/:userId', getInvitedProjects)
 router.get('/', getAllProjects)
 router.get('/:id', getProjectById)
-router.get('/owner/:ownerId', getMyProjects)
 router.put('/:id', updateProject)
 router.delete('/:id', deleteProject)
 

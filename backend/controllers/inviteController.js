@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import Invitation from '../models/Invitation.js'
+import User from '../models/User.js'
 import Project from '../models/Project.js'
 import sendEmail from '../utils/sendEmail.js'
 
@@ -26,9 +27,9 @@ export const inviteCollaborator = async (req, res) => {
 
     const inviteLink = `${process.env.CLIENT_URL}/accept-invite/${token}`
 
-    const addMember = await Project.findById(projectId)
-    addMember.members.push(invitation._id)
-    await addMember.save()
+    // const addMember = await Project.findById(projectId)
+    // addMember.members.push(invitation._id)
+    // await addMember.save()
 
     const html = `<div style="width: 100%">
       <p>
@@ -77,7 +78,7 @@ export const inviteCollaborator = async (req, res) => {
 }
 
 export const acceptInvitation = async (req, res) => {
-  const { token } = req.body
+  const { token, email } = req.body
 
   try {
     const invitation = await Invitation.findOne({
@@ -86,6 +87,19 @@ export const acceptInvitation = async (req, res) => {
     if (!invitation) {
       return res.status(400).json({ message: 'Invalid or expired token' })
     }
+
+    //  Find the user by email
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(404).json({
+        message:
+          'User not found. Please register first before accepting invite.',
+      })
+    }
+
+    const addMember = await Project.findById(invitation.project)
+    addMember.members.push(user._id)
+    await addMember.save()
 
     invitation.status = 'accepted'
     await invitation.save()

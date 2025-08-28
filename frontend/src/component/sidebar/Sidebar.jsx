@@ -16,6 +16,7 @@ const Sidebar = ({ updateProject }) => {
     setNewProject,
     setIsModalOpen,
     projects,
+    inviteProjects,
     handleProjectDetails,
   } = SidebarHandler(updateProject)
   return (
@@ -34,7 +35,7 @@ const Sidebar = ({ updateProject }) => {
               alt=''
             />
           </div>
-          <div className='sidebarMenu'>
+          {/* <div className='sidebarMenu'>
             {sidebarMenuItem.map((item, index) => (
               <div className='sidebarMenu__item' key={index}>
                 <img
@@ -47,7 +48,7 @@ const Sidebar = ({ updateProject }) => {
             ))}
 
             <div className='hrLine' />
-          </div>
+          </div> */}
           <div className='myProjectMenu'>
             <div className='header'>
               <h2>MY PROJECTS</h2>
@@ -77,6 +78,30 @@ const Sidebar = ({ updateProject }) => {
             </div>
             <div className='myProjectItems'>
               {projects?.map((item, index) => (
+                <div
+                  onClick={() => handleProjectDetails(item._id)}
+                  className='myProjectItem'
+                  key={index}
+                >
+                  <span
+                    className='myProjectColor'
+                    style={{
+                      backgroundColor: item.color,
+                    }}
+                  ></span>
+                  <p className='myProjectText'>{item?.title}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ---------------Shared with Me------------------- */}
+          <div className='myProjectMenu'>
+            <div className='header'>
+              <h2>Shared with Me</h2>
+            </div>
+            <div className='myProjectItems'>
+              {inviteProjects?.map((item, index) => (
                 <div
                   onClick={() => handleProjectDetails(item._id)}
                   className='myProjectItem'

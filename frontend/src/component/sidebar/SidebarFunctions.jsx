@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getInvitedProjectApi, getOwnerProjectApi } from '../../api/apiProject'
 
 const SidebarHandler = (updateProject) => {
   const navigate = useNavigate()
@@ -8,12 +9,11 @@ const SidebarHandler = (updateProject) => {
   const user = JSON.parse(localStorage.getItem('user') || 'null')
 
   const [projects, setProjects] = useState([])
+  const [inviteProjects, setInviteProjects] = useState([])
 
   const fetchOwnerProjects = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5001/api/projects/owner/${user?._id}`
-      )
+      const response = await getOwnerProjectApi(user?._id)
       if (response.status === 200) {
         setProjects(response.data)
         navigate(`/${response.data[0]._id}`)
@@ -22,9 +22,23 @@ const SidebarHandler = (updateProject) => {
       console.log(error)
     }
   }
+
+  const fetchSharedProjects = async () => {
+    try {
+      const response = await getInvitedProjectApi(user?._id)
+      if (response.status === 200) {
+        setInviteProjects(response.data)
+        navigate(`/${response.data[0]._id}`)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     if (user?._id) {
       fetchOwnerProjects()
+      fetchSharedProjects()
     }
   }, [user?._id])
 
@@ -80,6 +94,7 @@ const SidebarHandler = (updateProject) => {
     setIsModalOpen,
     projects,
     handleProjectDetails,
+    inviteProjects,
   }
 }
 

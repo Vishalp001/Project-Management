@@ -69,6 +69,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 20px;
+      font-weight: bold;
       h2 {
         color: #787486;
         font-size: 15px;
@@ -93,7 +94,7 @@
         padding: 10px;
         border-radius: 5px;
         font-size: 16px;
-        margin-bottom: 10px;
+        margin-bottom: 0px;
         cursor: pointer;
 
         &:hover {
