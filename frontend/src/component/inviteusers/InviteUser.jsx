@@ -47,7 +47,6 @@ const InviteUser = ({ projectDetails }) => {
       setInviteLoader(false)
     }
   }
-
   return (
     <>
       <HStack>
@@ -99,15 +98,6 @@ const InviteUser = ({ projectDetails }) => {
                             <Avatar.Fallback name={member.email} />
                           </Avatar.Root>
                           <Text>{member.email}</Text>
-                          <Badge
-                            px={2}
-                            variant='solid'
-                            colorPalette={
-                              member.status === 'pending' ? 'orange' : 'green'
-                            }
-                          >
-                            {member.status}
-                          </Badge>
                         </HStack>
                       )
                     })}
@@ -117,25 +107,22 @@ const InviteUser = ({ projectDetails }) => {
           </Portal>
         </Menu.Root>
 
-        <AvatarGroup gap='0' spaceX='-3' size='lg'>
-          <Avatar.Root>
-            <Avatar.Fallback name='Uchiha Sasuke' />
-            <Avatar.Image src='https://cdn.myanimelist.net/r/84x124/images/characters/9/131317.webp?s=d4b03c7291407bde303bc0758047f6bd' />
-          </Avatar.Root>
-
-          <Avatar.Root>
-            <Avatar.Fallback name='Baki Ani' />
-            <Avatar.Image src='https://cdn.myanimelist.net/r/84x124/images/characters/7/284129.webp?s=a8998bf668767de58b33740886ca571c' />
-          </Avatar.Root>
-
-          <Avatar.Root>
-            <Avatar.Fallback name='Uchiha Chan' />
-            <Avatar.Image src='https://cdn.myanimelist.net/r/84x124/images/characters/9/105421.webp?s=269ff1b2bb9abe3ac1bc443d3a76e863' />
-          </Avatar.Root>
-          <Avatar.Root color={'#D25B68'} bg={'#F4D7DA'} variant='solid'>
-            <Avatar.Fallback>+3</Avatar.Fallback>
-          </Avatar.Root>
-        </AvatarGroup>
+        {projectDetails.members.length > 0 && (
+          <AvatarGroup gap='0' spaceX='-3' size='lg'>
+            {projectDetails.members.map((member) => (
+              <Avatar.Root>
+                <Avatar.Fallback name={member.name} />
+              </Avatar.Root>
+            ))}
+            {projectDetails.members.length > 4 && (
+              <Avatar.Root color={'#D25B68'} bg={'#F4D7DA'} variant='solid'>
+                <Avatar.Fallback>
+                  {projectDetails.members.length - 3}
+                </Avatar.Fallback>
+              </Avatar.Root>
+            )}
+          </AvatarGroup>
+        )}
       </HStack>
     </>
   )

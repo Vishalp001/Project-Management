@@ -1,4 +1,14 @@
-import { Badge, HStack, Text, Stack, Menu, Portal } from '@chakra-ui/react'
+import {
+  Badge,
+  HStack,
+  Text,
+  Stack,
+  Menu,
+  Portal,
+  Button,
+  Select,
+  VStack,
+} from '@chakra-ui/react'
 import Sidebar from '../sidebar/Sidebar'
 import './home.scss'
 import Navbar from '../navbar/Navbar'
@@ -11,12 +21,13 @@ import files from '../../assets/logos/files.svg'
 import { SlOptions } from 'react-icons/sl'
 import Modal from '../../components/modals/Modal'
 import edit from '../../assets/logos/edit.svg'
-import link from '../../assets/logos/link.svg'
 import { MdDeleteOutline } from 'react-icons/md'
 import HomeHandler from './HomeFunction'
 import AddEditProject from '../modals/addEditProject/AddEditProject'
 import TaskDetails from '../modals/taskDetails/TaskDetails'
 import InviteUser from '../inviteusers/InviteUser'
+import { priorityConstant } from '../../constants/priorityConstants'
+import SelectMembers from './homeComponents/SelectMembers'
 
 const Home = () => {
   const {
@@ -45,12 +56,15 @@ const Home = () => {
     isTaskDetailsModalOpen,
     setIsTaskDetailsModalOpen,
     updateTask,
+    isProjectOwner,
+    handleMembersChange,
   } = HomeHandler()
 
   return (
     <>
       <div className='homeHeader'>
         <Modal
+          size='xl'
           title='Create Card'
           fields={[
             {
@@ -77,53 +91,57 @@ const Home = () => {
           isOpen={isModalOpen}
           setIsOpen={setIsModalOpen}
         >
-          <Text fontWeight={'medium'} mb={2}>
-            Add Priority
-          </Text>
-          <HStack>
-            <Badge
-              cursor={'pointer'}
-              p={'5px 10px'}
-              fontWeight={600}
-              bg='#F9EEE3'
-              color='#D58D49'
-              onClick={() =>
-                setNewCard((prev) => ({ ...prev, priority: 'Low' }))
-              }
-              border={newCard.priority === 'Low' ? '1px solid #D58D49' : 'none'}
-            >
-              Low
-            </Badge>
-            <Badge
-              cursor={'pointer'}
-              p={'5px 10px'}
-              fontWeight={600}
-              bg='#FBF1F2'
-              color='#D8727D'
-              onClick={() =>
-                setNewCard((prev) => ({ ...prev, priority: 'High' }))
-              }
-              border={
-                newCard.priority === 'High' ? '1px solid #D8727D' : 'none'
-              }
-            >
-              High
-            </Badge>
-            <Badge
-              cursor={'pointer'}
-              p={'5px 10px'}
-              fontWeight={600}
-              bg='#F0F4FF'
-              color='#4B7BE5'
-              onClick={() =>
-                setNewCard((prev) => ({ ...prev, priority: 'Medium' }))
-              }
-              border={
-                newCard.priority === 'Medium' ? '1px solid #4B7BE5' : 'none'
-              }
-            >
-              Medium
-            </Badge>
+          <HStack align={'flex-start'} justifyContent={'space-between'}>
+            <VStack alignItems={'flex-start'}>
+              <Text fontWeight={'medium'} mb={2}>
+                Add Priority
+              </Text>
+              <HStack>
+                {priorityConstant.map((priority) => (
+                  <Badge
+                    key={priority.name}
+                    cursor={'pointer'}
+                    p={'5px 10px'}
+                    fontWeight={600}
+                    bg={priority.bgColor}
+                    color={priority.color}
+                    onClick={() =>
+                      setNewCard((prev) => ({
+                        ...prev,
+                        priority: priority.name,
+                      }))
+                    }
+                    border={
+                      newCard.priority === priority.name
+                        ? `1px solid ${priority.color}`
+                        : 'none'
+                    }
+                  >
+                    {priority.name}
+                  </Badge>
+                ))}
+              </HStack>
+              <HStack
+                alignItems={'center'}
+                justifyContent={'center'}
+                mt={4}
+                gap={2}
+              >
+                <Text fontWeight={'medium'}>Owner:</Text>
+                <Badge>{projectDetails?.owner?.name}</Badge>
+              </HStack>
+            </VStack>
+
+            <VStack>
+              <HStack>
+                <VStack align={'flex-start'} mt={4} gap={2}>
+                  <SelectMembers
+                    onChange={handleMembersChange}
+                    projectDetails={projectDetails}
+                  />
+                </VStack>
+              </HStack>
+            </VStack>
           </HStack>
         </Modal>
         <Modal
@@ -181,25 +199,26 @@ const Home = () => {
                     >
                       {projectDetails?.title || 'Loading...'}
                     </Text>
-                    <HStack gap={'1rem'}>
-                      <img
-                        onClick={() =>
-                          openEditProjectModal(projectDetails?._id)
-                        }
-                        src={edit}
-                        alt='edit'
-                      />
-                      <img src={link} alt='link' />
-                      <Stack
-                        cursor={'pointer'}
-                        onClick={() => setIsDeletModalOpen(true)}
-                        bg='#DCD6FA'
-                        p='5px'
-                        borderRadius='25%'
-                      >
-                        <MdDeleteOutline color='#EB092F' />
-                      </Stack>
-                    </HStack>
+                    {isProjectOwner && (
+                      <HStack gap={'1rem'}>
+                        <img
+                          onClick={() =>
+                            openEditProjectModal(projectDetails?._id)
+                          }
+                          src={edit}
+                          alt='edit'
+                        />
+                        <Stack
+                          cursor={'pointer'}
+                          onClick={() => setIsDeletModalOpen(true)}
+                          bg='#DCD6FA'
+                          p='5px'
+                          borderRadius='25%'
+                        >
+                          <MdDeleteOutline color='#EB092F' />
+                        </Stack>
+                      </HStack>
+                    )}
                   </HStack>
                   <HStack className='homeHeaderRight'>
                     <InviteUser projectDetails={projectDetails} />
@@ -324,16 +343,16 @@ const Home = () => {
                                           </Portal>
                                         </Menu.Root>
                                       </div>
-                                      <div
-                                      // onClick={(e) => {
-                                      //   e.stopPropagation()
-                                      //   console.log('dsds')
-                                      //   handleTaskDetails(card._id)
-                                      // }}
-                                      >
+                                      <div>
                                         <h3 className='title'>{card.title}</h3>
                                         <p className='desc'>
-                                          {card.description}
+                                          {card.description.split(' ').length >
+                                          23
+                                            ? card.description
+                                                .split(' ')
+                                                .slice(0, 23)
+                                                .join(' ') + '...'
+                                            : card.description}
                                         </p>
                                       </div>
                                       <div className='cardFooter'>

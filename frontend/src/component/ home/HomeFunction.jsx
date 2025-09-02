@@ -20,7 +20,7 @@ const HomeHandler = () => {
   const [isDeletModalOpen, setIsDeletModalOpen] = useState(false)
   const [isEditModalOpen, setEditIsModalOpen] = useState(false)
   const [getColor, setGetColor] = useState('#eb5e41')
-
+  const [isProjectOwner, setIsProjectOwner] = useState(false)
   const initialProjectState = {
     title: '',
     members: [],
@@ -104,14 +104,23 @@ const HomeHandler = () => {
     setColumns(updatedColumns)
   }
 
+  const [assignedMembers, setAssignedMembers] = useState([])
+
+  const handleMembersChange = (members) => {
+    const ids = members.map((m) => m._id) // only IDs
+    setAssignedMembers(ids)
+  }
+
   const addCard = async () => {
     setNewCard((prev) => ({ ...prev, project: projectId }))
     const newCardData = {
       ...newCard,
+      assignedUsers: assignedMembers,
       project: projectId,
       owner: user?._id,
     }
     const res = await createTask(newCardData)
+    console.log(res, 'New Card Created')
     if (res.status === 201) {
       const createdCard = res.data
       const status = createdCard.status || 'To Do'
@@ -178,6 +187,11 @@ const HomeHandler = () => {
 
         if (res.status === 200) {
           setProjectDetails(res.data)
+          if (res.data?.owner?._id === user?._id) {
+            setIsProjectOwner(true)
+          } else {
+            setIsProjectOwner(false)
+          }
         }
       } catch (err) {
         console.error('Error fetching project:', err)
@@ -285,6 +299,10 @@ const HomeHandler = () => {
     isTaskDetailsModalOpen,
     setIsTaskDetailsModalOpen,
     updateTask,
+    isProjectOwner,
+    assignedMembers,
+    setAssignedMembers,
+    handleMembersChange,
   }
 }
 

@@ -96,28 +96,30 @@ const Sidebar = ({ updateProject }) => {
           </div>
 
           {/* ---------------Shared with Me------------------- */}
-          <div className='myProjectMenu'>
-            <div className='header'>
-              <h2>Shared with Me</h2>
+          {inviteProjects?.length > 0 && (
+            <div className='myProjectMenu'>
+              <div className='header'>
+                <h2>Shared with Me</h2>
+              </div>
+              <div className='myProjectItems'>
+                {inviteProjects?.map((item, index) => (
+                  <div
+                    onClick={() => handleProjectDetails(item._id)}
+                    className='myProjectItem'
+                    key={index}
+                  >
+                    <span
+                      className='myProjectColor'
+                      style={{
+                        backgroundColor: item.color,
+                      }}
+                    ></span>
+                    <p className='myProjectText'>{item?.title}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className='myProjectItems'>
-              {inviteProjects?.map((item, index) => (
-                <div
-                  onClick={() => handleProjectDetails(item._id)}
-                  className='myProjectItem'
-                  key={index}
-                >
-                  <span
-                    className='myProjectColor'
-                    style={{
-                      backgroundColor: item.color,
-                    }}
-                  ></span>
-                  <p className='myProjectText'>{item?.title}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
       ) : (
         <div className='sidebarClosed'>
