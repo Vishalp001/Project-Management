@@ -5,9 +5,8 @@ import {
   Stack,
   Menu,
   Portal,
-  Button,
-  Select,
-  VStack,
+  AvatarGroup,
+  Avatar,
 } from '@chakra-ui/react'
 import Sidebar from '../sidebar/Sidebar'
 import './home.scss'
@@ -23,11 +22,11 @@ import Modal from '../../components/modals/Modal'
 import edit from '../../assets/logos/edit.svg'
 import { MdDeleteOutline } from 'react-icons/md'
 import HomeHandler from './HomeFunction'
-import AddEditProject from '../modals/addEditProject/AddEditProject'
-import TaskDetails from '../modals/taskDetails/TaskDetails'
+import AddEditProjectModal from './homeComponents/AddEditProjectModal'
+import TaskDetailsModal from './homeComponents/TaskDetailsModal'
 import InviteUser from '../inviteusers/InviteUser'
 import { priorityConstant } from '../../constants/priorityConstants'
-import SelectMembers from './homeComponents/SelectMembers'
+import CreateTaskModal from './homeComponents/CreateTaskModal'
 
 const Home = () => {
   const {
@@ -63,87 +62,16 @@ const Home = () => {
   return (
     <>
       <div className='homeHeader'>
-        <Modal
-          size='xl'
-          title='Create Card'
-          fields={[
-            {
-              label: 'Add Title',
-              placeholder: 'Enter Title',
-              value: newCard.title,
-              onChange: (val) =>
-                setNewCard((prev) => ({ ...prev, title: val })),
-            },
-            {
-              label: 'Add Description',
-              placeholder: 'Enter Description',
-              value: newCard.description,
-              type: 'textarea',
-              onChange: (val) =>
-                setNewCard((prev) => ({ ...prev, description: val })),
-            },
-          ]}
-          onSave={addCard}
-          onCancel={() => {
-            console.log('Modal cancelled')
-            setNewCard({ title: '', description: '' }) // optional: reset form
-          }}
-          isOpen={isModalOpen}
-          setIsOpen={setIsModalOpen}
-        >
-          <HStack align={'flex-start'} justifyContent={'space-between'}>
-            <VStack alignItems={'flex-start'}>
-              <Text fontWeight={'medium'} mb={2}>
-                Add Priority
-              </Text>
-              <HStack>
-                {priorityConstant.map((priority) => (
-                  <Badge
-                    key={priority.name}
-                    cursor={'pointer'}
-                    p={'5px 10px'}
-                    fontWeight={600}
-                    bg={priority.bgColor}
-                    color={priority.color}
-                    onClick={() =>
-                      setNewCard((prev) => ({
-                        ...prev,
-                        priority: priority.name,
-                      }))
-                    }
-                    border={
-                      newCard.priority === priority.name
-                        ? `1px solid ${priority.color}`
-                        : 'none'
-                    }
-                  >
-                    {priority.name}
-                  </Badge>
-                ))}
-              </HStack>
-              <HStack
-                alignItems={'center'}
-                justifyContent={'center'}
-                mt={4}
-                gap={2}
-              >
-                <Text fontWeight={'medium'}>Owner:</Text>
-                <Badge>{projectDetails?.owner?.name}</Badge>
-              </HStack>
-            </VStack>
-
-            <VStack>
-              <HStack>
-                <VStack align={'flex-start'} mt={4} gap={2}>
-                  <SelectMembers
-                    onChange={handleMembersChange}
-                    projectDetails={projectDetails}
-                  />
-                </VStack>
-              </HStack>
-            </VStack>
-          </HStack>
-        </Modal>
+        <CreateTaskModal
+          newCard={newCard}
+          setNewCard={setNewCard}
+          addCard={addCard}
+          isModalOpen={isModalOpen}
+          handleMembersChange={handleMembersChange}
+          projectDetails={projectDetails}
+          priorityConstant={priorityConstant}
+          setIsModalOpen={setIsModalOpen}
+        />
         <Modal
           size={'xs'}
           title='Are you sure you want to delete this project?'
@@ -152,7 +80,7 @@ const Home = () => {
           setIsOpen={setIsDeletModalOpen}
         />
 
-        <AddEditProject
+        <AddEditProjectModal
           title='Edit Project'
           fields={[
             {
@@ -166,14 +94,13 @@ const Home = () => {
           onSave={handleEditProject}
           onCancel={() => {
             setEditProject({ title: '' })
-            // optional: reset form
           }}
           isOpen={isEditModalOpen}
           setIsOpen={setEditIsModalOpen}
           colorCode={handleColorCode}
         />
 
-        <TaskDetails
+        <TaskDetailsModal
           updateTask={updateTask}
           title='Project Details'
           isOpen={isTaskDetailsModalOpen}
@@ -356,20 +283,35 @@ const Home = () => {
                                         </p>
                                       </div>
                                       <div className='cardFooter'>
-                                        <div className='profile'>
-                                          <img
-                                            src='https://i.pravatar.cc/150?img=3'
-                                            alt='profile'
-                                          />
-                                          <img
-                                            src='https://i.pravatar.cc/150?img=4'
-                                            alt='profile'
-                                          />
-                                          <img
-                                            src='https://i.pravatar.cc/150?img=5'
-                                            alt='profile'
-                                          />
-                                        </div>
+                                        {card.assignedUsers.length > 0 && (
+                                          <AvatarGroup
+                                            gap='0'
+                                            spaceX='-3'
+                                            size='lg'
+                                          >
+                                            {card.assignedUsers.map(
+                                              (member) => (
+                                                <Avatar.Root>
+                                                  <Avatar.Fallback
+                                                    name={member.name}
+                                                  />
+                                                </Avatar.Root>
+                                              )
+                                            )}
+                                            {card.assignedUsers.length > 4 && (
+                                              <Avatar.Root
+                                                color={'#D25B68'}
+                                                bg={'#F4D7DA'}
+                                                variant='solid'
+                                              >
+                                                <Avatar.Fallback>
+                                                  {card.assignedUsers.length -
+                                                    3}
+                                                </Avatar.Fallback>
+                                              </Avatar.Root>
+                                            )}
+                                          </AvatarGroup>
+                                        )}
                                         <div className='fileAndComment'>
                                           <div className='comment'>
                                             <img src={comment} alt='comments' />

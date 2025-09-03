@@ -1,8 +1,7 @@
-import React from 'react'
 import Modal from '../../../components/modals/Modal'
 import { Badge, HStack, Text } from '@chakra-ui/react'
 
-const TaskDetails = ({
+const TaskDetailsModal = ({
   updateTask,
   fields = [],
   // cancleText = 'Cancle',
@@ -67,4 +66,4 @@ const TaskDetails = ({
   )
 }
 
-export default TaskDetails
+export default TaskDetailsModal

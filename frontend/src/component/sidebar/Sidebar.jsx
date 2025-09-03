@@ -4,7 +4,7 @@ import arrow from '../../assets/logos/arrow.svg'
 import addProjects from '../../assets/logos/addProjects.svg'
 import { sidebarMenuItem } from './sidebarConstants'
 import SidebarHandler from './SidebarFunctions.jsx'
-import AddEditProject from '../modals/addEditProject/AddEditProject.jsx'
+import AddEditProject from '../ home/homeComponents/AddEditProjectModal.jsx'
 const Sidebar = ({ updateProject }) => {
   const {
     isSidebar,
