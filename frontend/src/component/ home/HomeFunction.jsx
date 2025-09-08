@@ -6,6 +6,7 @@ import {
   updateTaskStatusApi,
   getTaskByProjectIdApi,
   deleteTaskApi,
+  updateTaskApi,
 } from '../../api/task.api'
 import {
   deletProjectApi,
@@ -89,7 +90,6 @@ const HomeHandler = () => {
   }
   const [newCard, setNewCard] = useState(initialCardState)
 
-  // If you want to populate the columns:
   const populateColumn = (res) => {
     const updatedColumns = {
       'To Do': [],
@@ -120,7 +120,7 @@ const HomeHandler = () => {
       owner: user?._id,
     }
     const res = await createTask(newCardData)
-    console.log(res, 'New Card Created')
+
     if (res.status === 201) {
       const createdCard = res.data
       const status = createdCard.status || 'To Do'
@@ -167,7 +167,6 @@ const HomeHandler = () => {
   const handleEditProject = async () => {
     try {
       const res = await updateProjectApi(projectId, editProject)
-      console.log(res, 'Project updated successfully')
       if (res.status === 200) {
         setProjectDetails(res.data)
         setEditIsModalOpen(false)
@@ -183,8 +182,6 @@ const HomeHandler = () => {
         const res = await axios.get(
           `http://localhost:5001/api/projects/${projectId}`
         )
-        // console.log(res.data)
-
         if (res.status === 200) {
           setProjectDetails(res.data)
           if (res.data?.owner?._id === user?._id) {
@@ -228,7 +225,6 @@ const HomeHandler = () => {
   }
 
   const handleDeleteTask = async (cardId) => {
-    console.log('cardId')
     try {
       const res = await deleteTaskApi(cardId)
       if (res.status === 200 || res.status === 204) {
@@ -253,6 +249,7 @@ const HomeHandler = () => {
     priority: 'Low',
     project: '',
     assignedUsers: [],
+    cardId: '',
   })
 
   const handleTaskDetails = async (cardId) => {
@@ -267,9 +264,73 @@ const HomeHandler = () => {
           priority: task.priority,
           project: task.project,
           assignedUsers: task.assignedUsers,
+          cardId: task._id,
         }))
         break
       }
+    }
+  }
+
+  // Update Task Modal
+
+  const [updateCard, setUpdateCard] = useState(null)
+
+  useEffect(() => {
+    if (updateTask) {
+      setUpdateCard({
+        title: updateTask.title || '',
+        description: updateTask.description || '',
+        priority: updateTask.priority || 'Low',
+        assignedUsers: updateTask.assignedUsers || [],
+        cardId: updateTask?.cardId,
+      })
+    }
+  }, [updateTask])
+
+  const handleFieldChange = (field, value) => {
+    setUpdateCard((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const updateTaskCard = async () => {
+    if (!updateCard) return
+
+    try {
+      const res = await updateTaskApi(updateCard.cardId, {
+        ...updateCard,
+        assignedUsers: assignedMembers,
+      })
+
+      if (res.status === 200) {
+        const updatedTask = res.data
+
+        // Update columns immediately
+        setColumns((prev) => {
+          const updated = { ...prev }
+
+          // Remove the old version from its column
+          Object.keys(updated).forEach((col) => {
+            updated[col] = updated[col].filter(
+              (task) => task._id !== updatedTask._id
+            )
+          })
+
+          // Add the updated task in the right column based on its status
+          if (!updated[updatedTask.status]) {
+            updated[updatedTask.status] = []
+          }
+          updated[updatedTask.status] = [
+            ...updated[updatedTask.status],
+            updatedTask,
+          ]
+
+          return updated
+        })
+
+        // Optionally close the modal
+      }
+      setIsTaskDetailsModalOpen(false)
+    } catch (error) {
+      console.error('Error Updating Card', error)
     }
   }
 
@@ -303,6 +364,10 @@ const HomeHandler = () => {
     assignedMembers,
     setAssignedMembers,
     handleMembersChange,
+    updateCard,
+    handleFieldChange,
+    updateTaskCard,
+    setUpdateCard,
   }
 }
 

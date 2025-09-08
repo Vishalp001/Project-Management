@@ -9,3 +9,6 @@ export const updateTaskStatusApi = (taskId, status) =>
   apiClient.put(`/tasks/${taskId}`, { status })
 
 export const deleteTaskApi = (cardId) => apiClient.delete(`/tasks/${cardId}`)
+
+export const updateTaskApi = (taskId, updates) =>
+  apiClient.put(`/tasks/${taskId}`, { updates })

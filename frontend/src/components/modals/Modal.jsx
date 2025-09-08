@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import {
   Button,
+  CloseButton,
   Dialog,
   Field,
   Input,
@@ -20,6 +21,8 @@ const Modal = ({
   setIsOpen,
   children,
   size = 'md',
+  showCancel = true,
+  showSave = true,
 }) => {
   const ref = useRef(null)
 
@@ -46,9 +49,18 @@ const Modal = ({
           <Dialog.Backdrop />
           <Dialog.Positioner>
             <Dialog.Content p='4'>
+              <CloseButton
+                right={0}
+                position={'absolute'}
+                top={0}
+                onClick={handleCancel}
+                size='sm'
+              />
+
               <Dialog.Header>
                 <Dialog.Title pb={2}> {title}</Dialog.Title>
               </Dialog.Header>
+
               <Dialog.Body>
                 <Stack gap='4'>
                   {fields.map((field, index) => (
@@ -79,14 +91,16 @@ const Modal = ({
                 </Stack>
               </Dialog.Body>
               <Dialog.Footer mt={4}>
-                {/* <Dialog.ActionTrigger asChild> */}
-                <Button px={2} onClick={handleCancel} variant='outline'>
-                  {cancleText}
-                </Button>
-                {/* </Dialog.ActionTrigger> */}
-                <Button p={2} onClick={handleSave}>
-                  {saveText}
-                </Button>
+                {showCancel && (
+                  <Button px={2} onClick={handleCancel} variant='outline'>
+                    {cancleText}
+                  </Button>
+                )}
+                {showSave && (
+                  <Button p={2} onClick={handleSave}>
+                    {saveText}
+                  </Button>
+                )}
               </Dialog.Footer>
             </Dialog.Content>
           </Dialog.Positioner>

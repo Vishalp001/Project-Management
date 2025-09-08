@@ -6,15 +6,11 @@ import { Colorpicker } from '../../../components/ui/color-picker'
 const AddEditProject = ({
   title,
   fields = [],
-  // cancleText = 'Cancle',
-  // saveText = 'Save',
   onSave,
   onCancel,
   isOpen,
   colorCode,
   setIsOpen,
-  // children,
-  // size = 'md',
 }) => {
   return (
     <Modal

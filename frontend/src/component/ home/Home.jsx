@@ -57,6 +57,10 @@ const Home = () => {
     updateTask,
     isProjectOwner,
     handleMembersChange,
+    updateCard,
+    setUpdateCard,
+    updateTaskCard,
+    handleFieldChange,
   } = HomeHandler()
 
   return (
@@ -72,6 +76,20 @@ const Home = () => {
           priorityConstant={priorityConstant}
           setIsModalOpen={setIsModalOpen}
         />
+
+        <TaskDetailsModal
+          updateCard={updateCard}
+          setUpdateCard={setUpdateCard}
+          updateTask={updateTask}
+          isOpen={isTaskDetailsModalOpen}
+          setIsOpen={setIsTaskDetailsModalOpen}
+          projectDetails={projectDetails}
+          handleMembersChange={handleMembersChange}
+          updateTaskCard={updateTaskCard}
+          handleFieldChange={handleFieldChange}
+        />
+
+        {/* Delete Modal */}
         <Modal
           size={'xs'}
           title='Are you sure you want to delete this project?'
@@ -100,12 +118,6 @@ const Home = () => {
           colorCode={handleColorCode}
         />
 
-        <TaskDetailsModal
-          updateTask={updateTask}
-          title='Project Details'
-          isOpen={isTaskDetailsModalOpen}
-          setIsOpen={setIsTaskDetailsModalOpen}
-        />
         <Sidebar updateProject={updateProject} />
         <div className='homeContainer'>
           <Navbar />
@@ -290,8 +302,8 @@ const Home = () => {
                                             size='lg'
                                           >
                                             {card.assignedUsers.map(
-                                              (member) => (
-                                                <Avatar.Root>
+                                              (member, index) => (
+                                                <Avatar.Root key={index}>
                                                   <Avatar.Fallback
                                                     name={member.name}
                                                   />

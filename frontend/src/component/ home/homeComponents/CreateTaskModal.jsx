@@ -36,7 +36,6 @@ const CreateTaskModal = ({
       onSave={addCard}
       onCancel={() => {
         console.log('Modal cancelled')
-        setNewCard({ title: '', description: '' }) // optional: reset form
       }}
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
