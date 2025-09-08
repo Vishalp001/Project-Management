@@ -11,7 +11,7 @@ import {
 import Sidebar from '../sidebar/Sidebar'
 import './home.scss'
 import Navbar from '../navbar/Navbar'
-import { DndContext } from '@dnd-kit/core'
+import { DndContext, useSensors, useSensor, MouseSensor } from '@dnd-kit/core'
 import { Draggable } from '../Draggable'
 import { Droppable } from '../Droppable'
 import addCardImg from '../../assets/logos/addCard.svg'
@@ -62,6 +62,14 @@ const Home = () => {
     updateTaskCard,
     handleFieldChange,
   } = HomeHandler()
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5, // drag starts only after 5px movement
+      },
+    })
+  )
 
   return (
     <>
@@ -167,6 +175,7 @@ const Home = () => {
                   <DndContext
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
+                    sensors={sensors}
                   >
                     {Object.keys(columns).map((columnName) => {
                       return (
@@ -213,17 +222,22 @@ const Home = () => {
                               .reverse()
                               .map((card) => (
                                 <Draggable id={card._id} key={card._id}>
-                                  {({ listeners, attributes }) => (
+                                  {({
+                                    setNodeRef,
+                                    attributes,
+                                    listeners,
+                                    style,
+                                  }) => (
                                     <Stack
+                                      ref={setNodeRef}
+                                      style={style}
+                                      {...attributes}
+                                      {...listeners}
                                       onClick={() =>
                                         handleTaskDetails(card._id)
                                       }
-                                      className='card'
+                                      className='cardContainer'
                                     >
-                                      <div {...listeners} {...attributes}>
-                                        <div className='dragIcon' />
-                                      </div>
-
                                       <div className='cardHeader'>
                                         <Badge
                                           cursor={'pointer'}
