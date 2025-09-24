@@ -1,19 +1,348 @@
-.homeHeader {
-  display: flex;
-  width: 100%;
-  .homeContainer {
-    width: 100%;
-    .homeContent {
-      height: calc(100vh - 78px);
-      padding: 40px;
-      .columnContainer {
-        display: flex;
-        gap: 20px;
+/* ---------- Fixes for card wrapping + horizontal columns on mobile ---------- */
 
-        width: 100%;
-        .columnContainerBox {
-        }
+/* general card fixes (apply on all sizes) */
+.cardContainer {
+  /* remove fixed height */
+  height: auto !important;
+  min-height: 80px;
+  padding: 14px;
+  box-sizing: border-box;
+
+  /* let long words break so the card doesn't expand horizontally */
+  .title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0d062d;
+    margin: 6px 0;
+    word-break: break-word;
+    white-space: normal;
+    overflow-wrap: anywhere; /* ensure long text can break */
+  }
+
+  .desc {
+    font-size: 0.95rem;
+    color: #6b6870;
+    margin-top: 8px;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    /* clamp to 4 lines on desktop; smaller on mobile below */
+    -webkit-line-clamp: 4;
+    word-break: break-word;
+  }
+
+  .cardFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap; /* allow avatars and file/comment to wrap */
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 6px; /* keep spacing, allow wrapping */
+      img,
+      .chakra-avatar {
+        /* supports Chakra avatar elements */
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #fff;
+      }
+    }
+
+    .fileAndComment {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: #787486;
+      white-space: nowrap; /* keep the small icons & counts in one line */
+    }
+  }
+}
+
+/* ensure drag handle doesn't create overflow */
+.dropableBox .dragIcon {
+  right: -8px; /* keep inside small overflow area */
+  width: 6px;
+  height: calc(100% - 16px);
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+/* make sure dropable columns and column container are flexible */
+.columnContainer {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  box-sizing: border-box;
+  /* default behavior: allow wrapping on wider screens */
+  flex-wrap: wrap;
+}
+
+/* responsive behavior for tablet (optional) */
+@media (max-width: 1024px) {
+  .cardContainer .desc {
+    -webkit-line-clamp: 3;
+  }
+  .dropableBox {
+    flex: 0 0 48%; /* two columns per row if space permits */
+    min-width: 300px;
+  }
+}
+
+/* ======================= MOBILE: show columns side-by-side (horizontal swipe) ======================= */
+/* On small screens we make the column container horizontally scrollable and do NOT stack columns vertically.
+   This gives the "side-by-side" behavior you asked for. Adjust min-width for tune. */
+
+@media (max-width: 600px) {
+  /* force the kanban container to be a single horizontal strip */
+  .homeHeader .homeContainer .homeContent {
+    padding: 12px; /* tighten padding for mobile */
+  }
+
+  .columnContainer {
+    flex-wrap: nowrap; /* do not wrap columns to new row */
+    overflow-x: auto; /* allow swipe/scroll horizontally */
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding-bottom: 10px;
+  }
+
+  /* each dropable column becomes a horizontal card (side-by-side columns) */
+  .dropableBox {
+    flex: 0 0 85%; /* each column occupies ~85% of viewport width (tweak as needed) */
+    min-width: 320px; /* ensures card stays readable; lower if you want more visible columns */
+    max-width: 92%;
+    padding: 12px;
+    border-radius: 12px;
+    margin: 0; /* remove extra margins */
+  }
+
+  /* card becomes more compact (smaller paddings and fewer lines in description) */
+  .cardContainer {
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 10px;
+    .title {
+      font-size: 1rem;
+      -webkit-line-clamp: 2;
+    }
+    .desc {
+      font-size: 0.95rem;
+      color: #6b6870;
+      -webkit-line-clamp: 3; /* show fewer lines on mobile */
+    }
+
+    .cardFooter {
+      gap: 6px;
+      .profile img,
+      .chakra-avatar {
+        width: 32px;
+        height: 32px;
+      }
+      .fileAndComment {
+        font-size: 0.85rem;
       }
     }
   }
+
+  /* hide the vertical drag icon to avoid accidental drags on touch */
+  .dropableBox .dragIcon {
+    display: none;
+  }
+
+  /* show small scrollbar for horizontal scrolling */
+  .columnContainer::-webkit-scrollbar {
+    height: 8px;
+  }
+  .columnContainer::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+  }
+}
+
+/* ===== FORCE HORIZONTAL COLUMNS ON MOBILE ===== */
+@media (max-width: 600px) {
+  /* Very specific selector to beat earlier rules */
+  .homeHeader .homeContainer .homeContent .columnContainer {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important; /* do not stack vertically */
+    overflow-x: auto !important; /* enable horizontal swipe */
+    -webkit-overflow-scrolling: touch !important;
+    gap: 12px !important;
+    padding-bottom: 10px !important;
+  }
+
+  /* Make each column take most of viewport width so user swipes to see next column */
+  .homeHeader .homeContainer .homeContent .columnContainer .dropableBox {
+    flex: 0 0 92vw !important; /* ~92% of viewport width */
+    min-width: 92vw !important;
+    max-width: 92vw !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Cards inside a column should not overflow horizontally */
+  .homeHeader
+    .homeContainer
+    .homeContent
+    .columnContainer
+    .dropableBox
+    .cardContainer {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Hide the vertical drag handle on touch devices */
+  .homeHeader
+    .homeContainer
+    .homeContent
+    .columnContainer
+    .dropableBox
+    .dragIcon {
+    display: none !important;
+  }
+}
+
+/* MOBILE: fix right-side padding / uneven gap and keep horizontal columns */
+@media (max-width: 600px) {
+  /* reduce container padding so content aligns symmetrically */
+  .homeHeader .homeContainer .homeContent {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box;
+    overflow-x: hidden; /* avoid page-level horizontal overflow */
+  }
+
+  /* make the columns a horizontal scroller and remove extra internal paddings */
+  .homeHeader .homeContainer .homeContent .columnContainer {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* each column should use viewport minus container padding to avoid overflow.
+     24px total padding (12 left + 12 right) so use calc(100vw - 24px) */
+  .homeHeader .homeContainer .homeContent .columnContainer .dropableBox {
+    flex: 0 0 calc(100vw - 24px) !important;
+    width: calc(100vw - 24px) !important;
+    min-width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ensure cards inside columns don't overflow horizontally */
+  .homeHeader
+    .homeContainer
+    .homeContent
+    .columnContainer
+    .dropableBox
+    .cardContainer {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* hide vertical drag handle on touch devices (prevents overflow) */
+  .homeHeader
+    .homeContainer
+    .homeContent
+    .columnContainer
+    .dropableBox
+    .dragIcon {
+    display: none !important;
+  }
+
+  /* hide any stray horizontal scrollbar gap by ensuring html/body don't allow overflow */
+  html,
+  body {
+    overflow-x: hidden !important;
+  }
+}
+
+/* ===== FORCE HORIZONTAL COLUMNS: never stack vertically =====
+   Paste at the BOTTOM of home.scss so it overrides previous rules.
+*/
+.homeHeader .homeContainer .homeContent {
+  /* ensure container won't clip horizontal scrolling */
+  overflow-x: visible !important;
+  box-sizing: border-box;
+}
+
+/* make the column container a single horizontal scroll row */
+.homeHeader .homeContainer .homeContent .columnContainer {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important; /* do NOT wrap columns */
+  overflow-x: auto !important; /* allow horizontal scrolling */
+  -webkit-overflow-scrolling: touch !important;
+  gap: 20px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  box-sizing: border-box !important;
+}
+
+/* each column: fixed-ish width, will be shown side-by-side */
+.homeHeader .homeContainer .homeContent .columnContainer .dropableBox {
+  flex: 0 0 320px !important; /* change 320px to 360px if you want wider columns */
+  min-width: 300px !important; /* ensures readable column width */
+  max-width: calc(100% - 24px) !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* cards inside a column must not extend the column width */
+.homeHeader
+  .homeContainer
+  .homeContent
+  .columnContainer
+  .dropableBox
+  .cardContainer {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  height: auto !important;
+}
+
+/* hide the vertical drag bar on touch devices (avoids accidental drags) */
+.homeHeader
+  .homeContainer
+  .homeContent
+  .columnContainer
+  .dropableBox
+  .dragIcon {
+  display: none !important;
+}
+
+/* small nice scrollbar for horizontal scroll */
+.homeHeader .homeContainer .homeContent .columnContainer::-webkit-scrollbar {
+  height: 8px;
+}
+.homeHeader
+  .homeContainer
+  .homeContent
+  .columnContainer::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+/* Ensure page-level overflow-x is disabled so you don't get a second scrollbar */
+html,
+body {
+  overflow-x: hidden !important;
 }

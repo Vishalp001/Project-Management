@@ -7,6 +7,7 @@ import downArrow from '../../assets/logos/downArrow.svg'
 import { ColorModeButton } from '../../components/ui/color-mode'
 import { Button, Menu, Portal } from '@chakra-ui/react'
 import { useAuth } from '../../context/AuthContext'
+import './navbar.responsive.scss'
 
 const Navbar = () => {
   const user = JSON.parse(localStorage.getItem('user') || 'null')

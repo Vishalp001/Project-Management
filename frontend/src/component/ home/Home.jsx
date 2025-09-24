@@ -27,6 +27,7 @@ import TaskDetailsModal from './homeComponents/TaskDetailsModal'
 import InviteUser from '../inviteusers/InviteUser'
 import { priorityConstant } from '../../constants/priorityConstants'
 import CreateTaskModal from './homeComponents/CreateTaskModal'
+import './home.responsive.scss'
 
 const Home = () => {
   const {
@@ -138,7 +139,7 @@ const Home = () => {
                   justifyContent={'space-between'}
                   alignItems={'center'}
                 >
-                  <HStack gap={'1rem'}>
+                  <HStack flexWrap={'wrap'} gap={'1rem'}>
                     <Text
                       fontWeight={'600'}
                       fontSize={'2.5rem'}

@@ -1,51 +1,65 @@
+/* sidebar.scss
+   Replace your old sidebar.scss with this file
+*/
+
 .sidebar {
   max-width: 240px;
   min-width: 240px;
   border-right: 2px solid #dbdbdb;
   height: 100vh;
+  box-sizing: border-box;
+  background: #fff;
+  position: relative;
+
   .sidebar__top {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
-    padding: 20px;
+    padding: 18px 16px;
     height: 78px;
-    padding-top: 30px;
     border-bottom: 2px solid #dbdbdb;
+    box-sizing: border-box;
 
     .sidebar__logo-container {
       display: flex;
       align-items: center;
+      gap: 10px;
+
       .sidebar__logo {
         width: 24px;
         height: 24px;
-        margin-right: 10px;
       }
       .sidebar__title {
-        font-size: 24px;
-        font-weight: bold;
+        font-size: 20px;
+        font-weight: 700;
       }
     }
+
     .arrow {
-      margin-left: 15px;
+      margin-left: 10px;
       cursor: pointer;
+      width: 20px;
+      height: 20px;
     }
   }
+
   .sidebarMenu {
     display: flex;
     flex-direction: column;
     padding: 10px;
     gap: 10px;
+    box-sizing: border-box;
 
     .sidebarMenu__item {
       display: flex;
       align-items: center;
       padding: 10px;
-      border-radius: 5px;
-      font-size: 16px;
+      border-radius: 6px;
+      font-size: 15px;
       cursor: pointer;
-
       &:hover {
-        background-color: #f0f0f0;
+        background-color: #f7f7fb;
       }
 
       .sidebarMenu__icon {
@@ -53,120 +67,233 @@
         height: 20px;
         margin-right: 10px;
       }
-
       .sidebarMenu__text {
-        font-size: 16px;
-        color: #787486;
+        color: #6f6b74;
       }
     }
+
     .hrLine {
       border-bottom: 1px solid #dbdbdb;
+      margin: 8px 0;
     }
   }
+
   .myProjectMenu {
+    padding: 12px;
+
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px;
-      font-weight: bold;
+      margin-bottom: 8px;
       h2 {
         color: #787486;
-        font-size: 15px;
+        font-size: 13px;
+        margin: 0;
       }
-      img {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-        &:hover {
-          scale: 1.2;
-          transition: 0.2s ease-in-out;
-        }
+      button img {
+        width: 18px;
+        height: 18px;
       }
     }
+
     .myProjectItems {
       display: flex;
       flex-direction: column;
-      padding: 0 10px;
+      gap: 6px;
       .myProjectItem {
         display: flex;
         align-items: center;
-        padding: 10px;
-        border-radius: 5px;
-        font-size: 16px;
-        margin-bottom: 0px;
+        padding: 8px;
+        border-radius: 8px;
         cursor: pointer;
-
         &:hover {
-          background-color: #f1eefd;
+          background: #f1f1fb;
         }
-
         .myProjectColor {
           width: 10px;
           height: 10px;
           border-radius: 50%;
-          margin-right: 8px;
-          border-radius: '50%';
-          margin-right: '15px';
+          margin-right: 12px;
         }
-
         .myProjectText {
-          font-size: 16px;
-          color: #787486;
+          color: #6f6b74;
+          font-size: 14px;
         }
       }
     }
   }
 }
+
+/* collapsed sidebar */
 .sidebarClosed {
   max-width: 80px;
+  min-width: 80px;
   border-right: 2px solid #dbdbdb;
   height: 100vh;
+  box-sizing: border-box;
+  background: #fff;
+
   .sidebar__top {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    height: 78px;
-    padding-top: 30px;
-    border-bottom: 2px solid #dbdbdb;
 
-    .sidebar__logo-container {
-      display: flex;
-      align-items: center;
-      .sidebar__logo {
-        width: 24px;
-        height: 24px;
-        margin-right: 10px;
-      }
-      .sidebar__title {
-        font-size: 24px;
-        font-weight: bold;
-      }
+    padding: 16px;
+    .sidebar__logo {
+      width: 24px;
     }
     .arrow {
-      margin-right: 25px;
-      cursor: pointer;
+      margin-right: 12px;
     }
   }
   .sidebarMenu {
+    padding: 12px;
     display: flex;
     flex-direction: column;
-    padding: 20px;
     align-items: center;
-    gap: 20px;
+    gap: 18px;
+  }
+}
 
-    .sidebarMenu__icon {
-      width: 25px;
-      height: 25px;
-      padding: 2px;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .sidebar {
+    max-width: 200px;
+    min-width: 200px;
+  }
+  .sidebarClosed {
+    max-width: 64px;
+    min-width: 64px;
+  }
+}
 
-      &:hover {
-        background-color: #f0f0f0;
+/* Mobile: make sidebar overlay or hide (toggle with .sidebar--open) */
+@media (max-width: 600px) {
+  .sidebar {
+    display: none;
+  } /* hide default sidebar on small devices */
+  .sidebar.sidebar--open {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 220;
+    width: 78%;
+    max-width: 320px;
+    height: 100vh;
+    border-right: 1px solid #eee;
+    background: #fff;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* ---------- sidebar.scss (mobile part replacement) ---------- */
+/* Place this at bottom of your sidebar.scss (or replace old mobile section). */
+
+/* Mobile: collapsed left rail (do not hide) + overlay for expanded state */
+@media (max-width: 600px) {
+  /* collapsed by default: compact left rail */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 220;
+    width: 64px; /* collapsed width */
+    min-width: 64px;
+    height: 100vh;
+    background: #fff;
+    border-right: 1px solid #eee;
+    box-shadow: none;
+    overflow: auto;
+    transition: width 0.22s ease, transform 0.22s ease;
+  }
+
+  /* hide textual project lists inside the collapsed rail,
+     but keep icons/logo visible so the user can expand */
+  .sidebar {
+    .sidebar__logo-container .sidebar__title,
+    .myProjectMenu .header h2,
+    .myProjectMenu .myProjectItems,
+    .sidebarMenu,
+    .myProjectMenu .myProjectItems .myProjectText {
+      display: none;
+    }
+
+    /* keep the logo icon visible and centered */
+    .sidebar__logo-container {
+      padding-left: 12px;
+      .sidebar__logo {
+        width: 24px;
+        height: 24px;
       }
     }
+
+    .arrow {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+      cursor: pointer;
+    }
+  }
+
+  /* collapsed variant when using the sidebarClosed component */
+  .sidebarClosed {
+    display: block;
+    max-width: 64px;
+    min-width: 64px;
+    height: 100vh;
+    box-sizing: border-box;
+  }
+
+  /* Expanded overlay when user toggles open:
+     use the same class you already add: `sidebar--open` */
+  .sidebar.sidebar--open {
+    width: 78%;
+    max-width: 360px;
+    min-width: 260px;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    position: fixed;
+    z-index: 1000;
+    border-right: 1px solid #eee;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    background: #fff;
+    overflow-y: auto;
+  }
+
+  /* When expanded, show full content (undo previous display:none rules) */
+  .sidebar.sidebar--open {
+    .sidebar__logo-container .sidebar__title {
+      display: inline-block;
+    }
+    .myProjectMenu .header h2 {
+      display: block;
+    }
+    .myProjectMenu .myProjectItems {
+      display: block;
+    }
+    .sidebarMenu {
+      display: block;
+    }
+    .myProjectMenu .myProjectItems .myProjectText {
+      display: inline-block;
+    }
+  }
+
+  /* Optional: Backdrop style (render a div.sidebar-backdrop when open) */
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.32);
+    z-index: 900; /* below expanded sidebar (1000), above the page (default) */
+  }
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+@media (max-width: 600px) {
+  .sidebar.sidebar--open + .sidebar-backdrop {
+    display: block;
   }
 }

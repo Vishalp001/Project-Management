@@ -5,6 +5,7 @@ import addProjects from '../../assets/logos/addProjects.svg'
 import { sidebarMenuItem } from './sidebarConstants'
 import SidebarHandler from './SidebarFunctions.jsx'
 import AddEditProject from '../ home/homeComponents/AddEditProjectModal.jsx'
+import './sidebar.responsive.scss'
 const Sidebar = ({ updateProject }) => {
   const {
     isSidebar,
@@ -19,10 +20,11 @@ const Sidebar = ({ updateProject }) => {
     inviteProjects,
     handleProjectDetails,
   } = SidebarHandler(updateProject)
+
   return (
     <>
       {isSidebar ? (
-        <div className='sidebar'>
+        <div className={`sidebar ${isSidebar ? 'sidebar--open' : ''}`}>
           <div className='sidebar__top'>
             <div className='sidebar__logo-container'>
               <img className='sidebar__logo' src={logo} alt='' />

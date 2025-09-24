@@ -5,8 +5,25 @@ import { getInvitedProjectApi, getOwnerProjectApi } from '../../api/apiProject'
 
 const SidebarHandler = (updateProject) => {
   const navigate = useNavigate()
-
   const user = JSON.parse(localStorage.getItem('user') || 'null')
+
+  // other state...
+  // default true for desktop; we'll collapse automatically on mobile in useEffect
+  const [isSidebar, setIsSidebar] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [getColor, setGetColor] = useState('#eb5e41')
+
+  // Auto-collapse on mobile (run once)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const MOBILE_BREAKPOINT = 600
+      if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        setIsSidebar(false) // collapsed (shows .sidebarClosed UI) on mobile
+      } else {
+        setIsSidebar(true) // expanded on larger screens by default
+      }
+    }
+  }, [])
 
   const [projects, setProjects] = useState([])
   const [inviteProjects, setInviteProjects] = useState([])
@@ -45,10 +62,6 @@ const SidebarHandler = (updateProject) => {
   useEffect(() => {
     setProjects(updateProject)
   }, [updateProject])
-
-  const [isSidebar, setIsSidebar] = useState(true)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [getColor, setGetColor] = useState('#eb5e41')
 
   const initialProjectState = {
     title: '',
