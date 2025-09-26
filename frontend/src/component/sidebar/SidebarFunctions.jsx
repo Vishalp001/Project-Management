@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getInvitedProjectApi, getOwnerProjectApi } from '../../api/apiProject'
+import { API_BASE_URL } from '../../api/apiClient'
 
 const SidebarHandler = (updateProject) => {
   const navigate = useNavigate()
@@ -79,10 +80,7 @@ const SidebarHandler = (updateProject) => {
   }
 
   const addProject = async () => {
-    const response = await axios.post(
-      'http://localhost:5001/api/projects/',
-      newProject
-    )
+    const response = await axios.post(`${API_BASE_URL}/projects/`, newProject)
     if (response.status === 201) {
       setNewProject(initialProjectState)
       setIsModalOpen(false)

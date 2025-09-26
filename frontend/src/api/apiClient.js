@@ -1,7 +1,11 @@
 import axios from 'axios'
 
+export const API_BASE_URL =
+  'https://project-management-backend-aj1s.onrender.com/api'
+
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5001/api',
+  // baseURL: 'http://localhost:5001/api',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

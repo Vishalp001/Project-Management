@@ -9,6 +9,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { API_BASE_URL } from '../../api/apiClient'
 export default function VerifyLogin() {
   const navigate = useNavigate()
   const [name, setName] = useState('')
@@ -48,9 +49,7 @@ export default function VerifyLogin() {
 
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5001/api/user/${user.uid}`
-        )
+        const response = await axios.get(`${API_BASE_URL}/user/${user.uid}`)
 
         if (response.data) {
           setNewUser(false)
@@ -85,7 +84,7 @@ export default function VerifyLogin() {
         providerId: user.providerId,
         lastLoginAt: user.lastLoginAt,
       }
-      const response = await axios.post('http://localhost:5001/api/user', {
+      const response = await axios.post(`${API_BASE_URL}/user`, {
         payload,
       })
       localStorage.setItem('user', JSON.stringify(response.data))

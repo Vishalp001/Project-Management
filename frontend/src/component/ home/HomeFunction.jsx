@@ -13,6 +13,7 @@ import {
   getOwnerProjectApi,
   updateProjectApi,
 } from '../../api/apiProject'
+import { API_BASE_URL } from '../../api/apiClient'
 const HomeHandler = () => {
   const user = JSON.parse(localStorage.getItem('user') || 'null')
   const navigate = useNavigate()
@@ -179,9 +180,7 @@ const HomeHandler = () => {
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5001/api/projects/${projectId}`
-        )
+        const res = await axios.get(`${API_BASE_URL}/projects/${projectId}`)
         if (res.status === 200) {
           setProjectDetails(res.data)
           if (res.data?.owner?._id === user?._id) {
