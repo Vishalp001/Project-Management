@@ -89,10 +89,10 @@
   .cardContainer .desc {
     -webkit-line-clamp: 3;
   }
-  .dropableBox {
-    flex: 0 0 48%; /* two columns per row if space permits */
-    min-width: 300px;
-  }
+  // .dropableBox {
+  //   flex: 0 0 48%; /* two columns per row if space permits */
+  //   min-width: 300px;
+  // }
 }
 
 /* ======================= MOBILE: show columns side-by-side (horizontal swipe) ======================= */
@@ -109,7 +109,7 @@
     flex-wrap: nowrap; /* do not wrap columns to new row */
     overflow-x: auto; /* allow swipe/scroll horizontally */
     -webkit-overflow-scrolling: touch;
-    gap: 12px;
+    // gap: 12px;
     padding-bottom: 10px;
   }
 
@@ -175,7 +175,7 @@
     flex-wrap: nowrap !important; /* do not stack vertically */
     overflow-x: auto !important; /* enable horizontal swipe */
     -webkit-overflow-scrolling: touch !important;
-    gap: 12px !important;
+    // gap: 12px !important;
     padding-bottom: 10px !important;
   }
 
@@ -229,7 +229,7 @@
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
-    gap: 12px !important;
+    // gap: 12px !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
@@ -291,7 +291,7 @@
   flex-wrap: nowrap !important; /* do NOT wrap columns */
   overflow-x: auto !important; /* allow horizontal scrolling */
   -webkit-overflow-scrolling: touch !important;
-  gap: 20px !important;
+  // gap: 20px !important;
   padding-left: 12px !important;
   padding-right: 12px !important;
   box-sizing: border-box !important;
@@ -299,8 +299,8 @@
 
 /* each column: fixed-ish width, will be shown side-by-side */
 .homeHeader .homeContainer .homeContent .columnContainer .dropableBox {
-  flex: 0 0 320px !important; /* change 320px to 360px if you want wider columns */
-  min-width: 300px !important; /* ensures readable column width */
+  // flex: 0 0 320px !important; /* change 320px to 360px if you want wider columns */
+  // min-width: 300px !important; /* ensures readable column width */
   max-width: calc(100% - 24px) !important;
   margin: 0 !important;
   box-sizing: border-box !important;

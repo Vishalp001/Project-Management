@@ -21,13 +21,9 @@ $breakpoint-tablet: 1024px;
 
       .columnContainer {
         display: flex;
-        gap: 20px;
+        // gap: 20px;
         width: 100%;
         align-items: flex-start; /* ensure columns align to top */
-
-        .columnContainerBox {
-          /* empty placeholder for inner content if needed */
-        }
       }
     }
   }
@@ -160,7 +156,7 @@ $breakpoint-tablet: 1024px;
     padding: 20px;
 
     .columnContainer {
-      gap: 12px;
+      // gap: 12px;
 
       /* horizontally scrollable kanban for tablet */
       display: flex;
@@ -248,8 +244,8 @@ $breakpoint-tablet: 1024px;
     .columnContainer {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      overflow: visible;
+      // gap: 12px;
+      overflow: auto;
 
       .dropableBox {
         width: 100%;

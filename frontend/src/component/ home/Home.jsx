@@ -47,7 +47,6 @@ const Home = () => {
     isEditModalOpen,
     setEditIsModalOpen,
     handleEditProject,
-    handleColorCode,
     openEditProjectModal,
     editProject,
     setEditProject,
@@ -104,6 +103,7 @@ const Home = () => {
           title='Are you sure you want to delete this project?'
           onSave={() => handleDeletProject(projectDetails?._id)}
           isOpen={isDeletModalOpen}
+          saveText={'Delete'}
           setIsOpen={setIsDeletModalOpen}
         />
 
@@ -124,7 +124,7 @@ const Home = () => {
           }}
           isOpen={isEditModalOpen}
           setIsOpen={setEditIsModalOpen}
-          colorCode={handleColorCode}
+          colorCode={editProject?.color}
         />
 
         <Sidebar updateProject={updateProject} />
@@ -149,13 +149,14 @@ const Home = () => {
                     </Text>
                     {isProjectOwner && (
                       <HStack gap={'1rem'}>
-                        <img
+                        <Stack
+                          cursor={'pointer'}
                           onClick={() =>
                             openEditProjectModal(projectDetails?._id)
                           }
-                          src={edit}
-                          alt='edit'
-                        />
+                        >
+                          <img src={edit} alt='edit' />
+                        </Stack>
                         <Stack
                           cursor={'pointer'}
                           onClick={() => setIsDeletModalOpen(true)}
