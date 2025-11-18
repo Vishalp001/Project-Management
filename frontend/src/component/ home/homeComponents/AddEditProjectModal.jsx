@@ -22,7 +22,7 @@ const AddEditProject = ({
       onCancel={onCancel}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      saveText={'Update'}
+      saveText={isEdit ? 'Update' : 'Create'}
     >
       <HStack>
         <Colorpicker
