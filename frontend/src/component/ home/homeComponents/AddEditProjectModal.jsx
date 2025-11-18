@@ -9,8 +9,10 @@ const AddEditProject = ({
   onSave,
   onCancel,
   isOpen,
-  colorCode,
+  isEdit = false,
   setIsOpen,
+  onColorChange,
+  colorCode,
 }) => {
   return (
     <Modal
@@ -23,7 +25,11 @@ const AddEditProject = ({
       saveText={'Update'}
     >
       <HStack>
-        <Colorpicker colorCode={colorCode} />
+        <Colorpicker
+          colorCode={colorCode}
+          isEdit={isEdit}
+          onColorChange={onColorChange}
+        />
       </HStack>
     </Modal>
   )

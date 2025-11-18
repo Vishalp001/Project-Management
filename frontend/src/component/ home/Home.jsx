@@ -124,6 +124,10 @@ const Home = () => {
           }}
           isOpen={isEditModalOpen}
           setIsOpen={setEditIsModalOpen}
+          onColorChange={(color) => {
+            setEditProject((prev) => ({ ...prev, color }))
+          }}
+          isEdit={true}
           colorCode={editProject?.color}
         />
 

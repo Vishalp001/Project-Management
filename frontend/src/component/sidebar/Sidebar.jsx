@@ -11,7 +11,6 @@ const Sidebar = ({ updateProject }) => {
     isSidebar,
     setIsSidebar,
     isModalOpen,
-    handleColorCode,
     addProject,
     newProject,
     setNewProject,
@@ -72,7 +71,9 @@ const Sidebar = ({ updateProject }) => {
                 }}
                 isOpen={isModalOpen}
                 setIsOpen={setIsModalOpen}
-                colorCode={handleColorCode}
+                onColorChange={(color) => {
+                  setNewProject((prev) => ({ ...prev, color }))
+                }}
               />
               <button onClick={() => setIsModalOpen(true)}>
                 <img src={addProjects} alt='' />

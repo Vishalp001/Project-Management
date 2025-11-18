@@ -12,7 +12,6 @@ const SidebarHandler = (updateProject) => {
   // default true for desktop; we'll collapse automatically on mobile in useEffect
   const [isSidebar, setIsSidebar] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [getColor, setGetColor] = useState('#eb5e41')
 
   // Auto-collapse on mobile (run once)
   useEffect(() => {
@@ -63,6 +62,8 @@ const SidebarHandler = (updateProject) => {
   useEffect(() => {
     setProjects(updateProject)
   }, [updateProject])
+
+  const [getColor, setGetColor] = useState('#eb5e41')
 
   const initialProjectState = {
     title: '',
