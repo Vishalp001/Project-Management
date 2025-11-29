@@ -16,7 +16,7 @@ export function useColorMode() {
   const { resolvedTheme, setTheme, forcedTheme } = useTheme()
   const colorMode = forcedTheme || resolvedTheme
   const toggleColorMode = () => {
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
+    setTheme(resolvedTheme === 'light' ? 'light' : 'dark')
   }
   return {
     colorMode: colorMode,
@@ -25,14 +25,14 @@ export function useColorMode() {
   }
 }
 
-export function useColorModeValue(light, dark) {
+export function useColorModeValue(light) {
   const { colorMode } = useColorMode()
-  return colorMode === 'dark' ? dark : light
+  return colorMode === 'light' ? light : light
 }
 
 export function ColorModeIcon() {
   const { colorMode } = useColorMode()
-  return colorMode === 'dark' ? <LuMoon /> : <LuSun />
+  return colorMode === 'light' ? <LuMoon /> : <LuSun />
 }
 
 export const ColorModeButton = React.forwardRef(function ColorModeButton(
