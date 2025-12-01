@@ -4,7 +4,6 @@ import calender from '../../assets/logos/calender.svg'
 import notification from '../../assets/logos/notification.svg'
 import faq from '../../assets/logos/faq.svg'
 import downArrow from '../../assets/logos/downArrow.svg'
-import { ColorModeButton } from '../../components/ui/color-mode'
 import { Button, Menu, Portal } from '@chakra-ui/react'
 import { useAuth } from '../../context/AuthContext'
 import './navbar.responsive.scss'
@@ -56,8 +55,6 @@ const Navbar = () => {
               </Menu.Positioner>
             </Portal>
           </Menu.Root>
-
-          <ColorModeButton />
         </div>
       </div>
     </div>

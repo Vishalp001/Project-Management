@@ -50,8 +50,7 @@ export const getTaskById = async (req, res) => {
 export const updateTask = async (req, res) => {
   try {
     const { id } = req.params
-    const updates = req.body
-
+    const updates = req.body.updates || req.body
     const updatedTask = await Task.findByIdAndUpdate(
       id,
       { $set: updates }, // ensures assignedUsers overwrites
