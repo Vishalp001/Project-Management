@@ -107,17 +107,17 @@ const InviteUser = ({ projectDetails }) => {
           </Portal>
         </Menu.Root>
 
-        {projectDetails.members.length > 0 && (
+        {projectDetails?.members?.length > 0 && (
           <AvatarGroup gap='0' spaceX='-3' size='lg'>
             {projectDetails.members.map((member) => (
               <Avatar.Root>
                 <Avatar.Fallback name={member.name} />
               </Avatar.Root>
             ))}
-            {projectDetails.members.length > 4 && (
+            {projectDetails?.members?.length > 4 && (
               <Avatar.Root color={'#D25B68'} bg={'#F4D7DA'} variant='solid'>
                 <Avatar.Fallback>
-                  {projectDetails.members.length - 3}
+                  {projectDetails?.members?.length - 3}
                 </Avatar.Fallback>
               </Avatar.Root>
             )}

@@ -6,6 +6,9 @@ import { sidebarMenuItem } from './sidebarConstants'
 import SidebarHandler from './SidebarFunctions.jsx'
 import AddEditProject from '../ home/homeComponents/AddEditProjectModal.jsx'
 import './sidebar.responsive.scss'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 const Sidebar = ({ updateProject }) => {
   const {
     isSidebar,
@@ -18,6 +21,7 @@ const Sidebar = ({ updateProject }) => {
     projects,
     inviteProjects,
     handleProjectDetails,
+    projectLoader,
   } = SidebarHandler(updateProject)
 
   return (
@@ -80,21 +84,34 @@ const Sidebar = ({ updateProject }) => {
               </button>
             </div>
             <div className='myProjectItems'>
-              {projects?.map((item, index) => (
-                <div
-                  onClick={() => handleProjectDetails(item._id)}
-                  className='myProjectItem'
-                  key={index}
-                >
-                  <span
-                    className='myProjectColor'
-                    style={{
-                      backgroundColor: item.color,
-                    }}
-                  ></span>
-                  <p className='myProjectText'>{item?.title}</p>
-                </div>
-              ))}
+              {projectLoader ? (
+                <>
+                  <Skeleton count={5} />
+                </>
+              ) : projects?.length === 0 ? (
+                <p className='noProjectText'>No Projects Found</p>
+              ) : (
+                <>
+                  {projects?.length === 0 && (
+                    <p className='noProjectText'>No Projects Found</p>
+                  )}
+                  {projects?.map((item, index) => (
+                    <div
+                      onClick={() => handleProjectDetails(item._id)}
+                      className='myProjectItem'
+                      key={index}
+                    >
+                      <span
+                        className='myProjectColor'
+                        style={{
+                          backgroundColor: item.color,
+                        }}
+                      ></span>
+                      <p className='myProjectText'>{item?.title}</p>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
 

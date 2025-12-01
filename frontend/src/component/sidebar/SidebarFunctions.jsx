@@ -27,15 +27,23 @@ const SidebarHandler = (updateProject) => {
 
   const [projects, setProjects] = useState([])
   const [inviteProjects, setInviteProjects] = useState([])
+  const [projectLoader, setProjectLoader] = useState(false)
 
   const fetchOwnerProjects = async () => {
     try {
+      setProjectLoader(true)
+
       const response = await getOwnerProjectApi(user?._id)
-      if (response.status === 200) {
-        setProjects(response.data)
-        navigate(`/${response.data[0]._id}`)
+
+      setProjects(response.data.projects)
+      setProjectLoader(false)
+
+      // Only navigate if projects exist
+      if (response.data.count > 0) {
+        navigate(`/${response.data.projects[0]._id}`)
       }
     } catch (error) {
+      setProjectLoader(false)
       console.log(error)
     }
   }
@@ -107,6 +115,7 @@ const SidebarHandler = (updateProject) => {
     projects,
     handleProjectDetails,
     inviteProjects,
+    projectLoader,
   }
 }
 

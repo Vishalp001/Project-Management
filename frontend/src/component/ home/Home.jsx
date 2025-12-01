@@ -28,6 +28,7 @@ import InviteUser from '../inviteusers/InviteUser'
 import { priorityConstant } from '../../constants/priorityConstants'
 import CreateTaskModal from './homeComponents/CreateTaskModal'
 import './home.responsive.scss'
+import Skeleton from 'react-loading-skeleton'
 
 const Home = () => {
   const {
@@ -61,6 +62,7 @@ const Home = () => {
     setUpdateCard,
     updateTaskCard,
     handleFieldChange,
+    projectDetailsLoader,
   } = HomeHandler()
 
   const sensors = useSensors(
@@ -135,7 +137,7 @@ const Home = () => {
         <div className='homeContainer'>
           <Navbar />
           <div className='homeContent'>
-            {projectDetails !== null ? (
+            {!projectDetailsLoader ? (
               <>
                 <HStack
                   flexWrap={'wrap'}
@@ -149,7 +151,11 @@ const Home = () => {
                       fontSize={'2.5rem'}
                       color={'#0D062D'}
                     >
-                      {projectDetails?.title || 'Loading...'}
+                      {projectDetailsLoader ? (
+                        <Skeleton count={5} />
+                      ) : (
+                        projectDetails?.title
+                      )}
                     </Text>
                     {isProjectOwner && (
                       <HStack gap={'1rem'}>
@@ -391,7 +397,18 @@ const Home = () => {
                 </div>
               </>
             ) : (
-              <Text>Add Project</Text>
+              <>
+                <HStack wrap={'wrap'}>
+                  <Skeleton width={350} height={30} />
+                  <Skeleton width={50} height={30} />
+                  <Skeleton width={50} height={30} />
+                </HStack>
+                <HStack w={'100%'} gap={'20px'} mt={'20px'} wrap={'wrap'}>
+                  <Skeleton width={250} height={250} borderRadius={20} />
+                  <Skeleton width={250} height={250} borderRadius={20} />
+                  <Skeleton width={250} height={250} borderRadius={20} />
+                </HStack>
+              </>
             )}
           </div>
         </div>

@@ -154,6 +154,7 @@ const HomeHandler = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const [projectDetails, setProjectDetails] = useState(null)
+  const [projectDetailsLoader, setProjectDetailsLoader] = useState(false)
 
   const openEditProjectModal = async () => {
     if (!projectDetails) return
@@ -167,12 +168,15 @@ const HomeHandler = () => {
 
   const handleEditProject = async () => {
     try {
+      setProjectDetailsLoader(true)
       const res = await updateProjectApi(projectId, editProject)
       if (res.status === 200) {
+        setProjectDetailsLoader(false)
         setProjectDetails(res.data)
         setEditIsModalOpen(false)
       }
     } catch (error) {
+      setProjectDetailsLoader(false)
       console.log(error, 'Error editing project')
     }
   }
@@ -180,26 +184,31 @@ const HomeHandler = () => {
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
+        setProjectDetailsLoader(true)
+
         const res = await axios.get(`${API_BASE_URL}/projects/${projectId}`)
+
         if (res.status === 200) {
           setProjectDetails(res.data)
-          if (res.data?.owner?._id === user?._id) {
-            setIsProjectOwner(true)
-          } else {
-            setIsProjectOwner(false)
-          }
+
+          // Set owner status
+          const isOwner = res.data?.owner?._id === user?._id
+          setIsProjectOwner(isOwner)
         }
       } catch (err) {
         console.error('Error fetching project:', err)
         setProjectDetails(null)
         setUpdateProject(null)
+      } finally {
+        // Always stop loader
+        setProjectDetailsLoader(false)
       }
     }
 
     if (projectId) {
       fetchProjectDetails()
     }
-  }, [projectId])
+  }, [projectId, user?._id])
 
   const handleDeletProject = async (id) => {
     try {
@@ -339,6 +348,7 @@ const HomeHandler = () => {
     addCard,
     handleDeletProject,
     projectDetails,
+    projectDetailsLoader,
     isModalOpen,
     setIsModalOpen,
     updateProject,

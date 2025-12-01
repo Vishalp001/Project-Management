@@ -11,17 +11,24 @@ export async function createProject(req, res) {
 
 export async function getMyProjects(req, res) {
   try {
-    const ownerId = req.params.ownerId
-    const projects = await Project.find({ owner: ownerId }).populate(
-      'owner members tasks'
-    )
+    const { ownerId } = req.params
 
-    if (!projects || projects.length === 0) {
-      return res.status(404).json({ error: 'No projects found for this owner' })
-    }
-    res.status(200).json(projects)
+    const projects = await Project.find({ owner: ownerId })
+      .populate('owner', 'name email')
+      .populate('members', 'name email')
+      .populate('tasks')
+      .lean()
+
+    return res.status(200).json({
+      success: true,
+      count: projects.length,
+      projects,
+    })
   } catch (error) {
-    res.status(500).json({ error: err.message })
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    })
   }
 }
 
